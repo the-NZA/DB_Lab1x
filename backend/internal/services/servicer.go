@@ -1,6 +1,6 @@
 package services
 
-import "github.com/the-NZA/DB_Lab1/backend/internal/models"
+import "github.com/the-NZA/DB_Lab1x/backend/internal/models"
 
 type Servicer interface {
 	BookService() BookServicer

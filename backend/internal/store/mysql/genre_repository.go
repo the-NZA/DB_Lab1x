@@ -4,7 +4,7 @@ import (
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/the-NZA/DB_Lab1/backend/internal/models"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/models"
 )
 
 var (

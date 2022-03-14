@@ -5,7 +5,7 @@ import (
 	"math/rand"
 	"strconv"
 
-	"github.com/the-NZA/DB_Lab1/backend/internal/models"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/models"
 )
 
 var authors = []models.Author{

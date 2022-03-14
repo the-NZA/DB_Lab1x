@@ -2,8 +2,8 @@ package services
 
 import (
 	"github.com/go-pkgz/lgr"
-	"github.com/the-NZA/DB_Lab1/backend/internal/models"
-	"github.com/the-NZA/DB_Lab1/backend/internal/store/storer"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/models"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/store/storer"
 )
 
 type GenreService struct {

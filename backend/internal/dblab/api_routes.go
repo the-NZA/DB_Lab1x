@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/the-NZA/DB_Lab1/backend/internal/models"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/models"
 )
 
 var (

@@ -87,7 +87,7 @@ watch(() => route.params, async () => {
 			</div>
 			<div class="footer__link">
 				<a
-					href="https://github.com/the-NZA/DB_Lab1"
+					href="https://github.com/the-NZA/DB_Lab1x"
 					target="_blank"
 					title="Откроется в новой вкладке"
 				>Репозиторий</a>

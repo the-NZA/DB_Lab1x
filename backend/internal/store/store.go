@@ -3,11 +3,11 @@ package store
 import (
 	"errors"
 
-	"github.com/the-NZA/DB_Lab1/backend/internal/config"
-	"github.com/the-NZA/DB_Lab1/backend/internal/store/mock"
-	"github.com/the-NZA/DB_Lab1/backend/internal/store/mysql"
-	"github.com/the-NZA/DB_Lab1/backend/internal/store/sqlite3"
-	"github.com/the-NZA/DB_Lab1/backend/internal/store/storer"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/config"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/store/mock"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/store/mysql"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/store/sqlite3"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/store/storer"
 )
 
 var (

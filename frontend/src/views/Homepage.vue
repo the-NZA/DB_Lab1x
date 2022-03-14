@@ -35,7 +35,7 @@
 
 	<p>
 		Исходные тексты доступны в репозитории на
-		<a href="https://github.com/the-NZA/DB_Lab1">Github</a>
+		<a href="https://github.com/the-NZA/DB_Lab1x">Github</a>
 	</p>
 </template>
 

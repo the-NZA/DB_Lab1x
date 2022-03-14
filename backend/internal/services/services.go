@@ -1,8 +1,8 @@
 package services
 
 import (
-	"github.com/the-NZA/DB_Lab1/backend/internal/config"
-	"github.com/the-NZA/DB_Lab1/backend/internal/store/storer"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/config"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/store/storer"
 )
 
 type Services struct {

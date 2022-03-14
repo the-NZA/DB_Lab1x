@@ -8,8 +8,8 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/cors"
 	"github.com/go-pkgz/lgr"
-	"github.com/the-NZA/DB_Lab1/backend/internal/config"
-	"github.com/the-NZA/DB_Lab1/backend/internal/services"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/config"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/services"
 )
 
 // App represents application's main structure

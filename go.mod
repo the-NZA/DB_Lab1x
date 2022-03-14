@@ -1,4 +1,4 @@
-module github.com/the-NZA/DB_Lab1
+module github.com/the-NZA/DB_Lab1xx
 
 go 1.17
 
@@ -13,9 +13,5 @@ require (
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/mattn/go-sqlite3 v1.14.9
-)
-
-require (
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/stretchr/testify v1.7.0 // indirect
+	github.com/the-NZA/DB_Lab1x v0.0.0-20211222054351-8bdf035e1c25
 )

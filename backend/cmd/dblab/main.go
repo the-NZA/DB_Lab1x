@@ -10,10 +10,10 @@ import (
 	"time"
 
 	log "github.com/go-pkgz/lgr"
-	"github.com/the-NZA/DB_Lab1/backend/internal/config"
-	"github.com/the-NZA/DB_Lab1/backend/internal/dblab"
-	"github.com/the-NZA/DB_Lab1/backend/internal/services"
-	"github.com/the-NZA/DB_Lab1/backend/internal/store"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/config"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/dblab"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/services"
+	"github.com/the-NZA/DB_Lab1x/backend/internal/store"
 )
 
 var (
