@@ -1,0 +1,15 @@
+* {
+	box-sizing: border-box;
+}
+
+body {
+	font-family: system-ui;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	color: rgb(var(--sapphire));
+}
+
+.wrapper {
+	max-width: var(--site-width);
+	margin: 0 auto;
+}

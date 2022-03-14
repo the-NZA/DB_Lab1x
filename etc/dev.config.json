@@ -1,0 +1,7 @@
+{
+	"app_domain": "",
+	"app_port": 8080,
+	"db_type": "mysql",
+	"db_url": "root:lab_root_password@/lab",
+	"log_debug": true
+}

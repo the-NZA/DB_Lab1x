@@ -1,0 +1,21 @@
+:root {
+	--black: 0, 0, 0;
+	--white: 255, 255, 255;
+	--leanen: 250, 240, 230;
+	--redsand: 244, 164, 96;
+	--greyblue: 75, 111, 158;
+	--sapphire: 29, 30, 51;
+
+	--offset: 32px;
+	--offset-half: calc(var(--offset) / 2);
+	--offset-quarter: calc(var(--offset) / 4);
+
+	--site-width: 1440px;
+
+	--main-transition: 150ms all ease-in-out;
+
+	--main-shadow: 0px 1px 4px rgba(var(--black), 0.16) ;
+	--second-shadow: 	rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, 
+					rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+	
+}

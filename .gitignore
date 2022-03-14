@@ -1,0 +1,11 @@
+.DS_Store
+.env
+/dblab
+
+sqlite_data/
+mysql_data/
+
+/etc/*
+!/etc/*.config.json
+
+docker-compose.*

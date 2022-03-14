@@ -1,0 +1,45 @@
+:root {
+	--ag-header-foreground-color: rgb(var(--sapphire));
+	--ag-header-background-color: rgb(var(--leanen));
+	--ag-row-hover-color: rgba(var(--redsand), 0.25);
+}
+
+.ag-theme-alpine {
+	box-shadow: var(--main-shadow);
+	border-radius: var(--offset-quarter);
+	min-height: calc(var(--site-width) / 3);
+}
+
+.ag-theme-alpine .ag-root-wrapper {
+	/* border: 1px solid rgb(var(--sapphire)) !important; */
+	border-radius: var(--offset-quarter);
+}
+
+.ag-cell-wrapper .ag-selection-checkbox {
+	margin-right: 18px !important;
+}
+
+.ag-cell-wrap-text {
+	word-break: normal !important;
+}
+
+/* .ag-theme-alpine .ag-cell, 
+.ag-theme-alpine .ag-full-width-row .ag-cell-wrapper.ag-row-group {
+	line-height: 25px;
+} */
+
+.centered {
+	justify-content: center;
+}
+
+.centered-cell {
+	min-height: 100%;
+	display: flex;
+	align-items: center;
+
+	line-height: 2;
+}
+
+.centered-cell span {
+	line-height: 2;
+}

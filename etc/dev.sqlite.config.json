@@ -1,0 +1,7 @@
+{
+	"app_domain": "",
+	"app_port": 8080,
+	"db_type": "sqlite3",
+	"db_url": "./sqlite_data/lab.db",
+	"log_debug": true
+}

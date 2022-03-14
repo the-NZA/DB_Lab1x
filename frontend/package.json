@@ -1,0 +1,33 @@
+{
+  "name": "frontend",
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "serve": "vite preview"
+  },
+  "dependencies": {
+    "@ag-grid-community/all-modules": "^26.2.0",
+    "ag-grid-community": "^26.2.0",
+    "ag-grid-vue3": "^26.2.0",
+    "pinia": "^2.0.6",
+    "vue": "^3.2.16",
+    "vue-multiselect": "^3.0.0-alpha.2",
+    "vue-router": "^4.0.12",
+    "vuex": "^4.0.2"
+  },
+  "private": true,
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^1.9.3",
+    "autoprefixer": "^10.4.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "cssnano": "^5.0.12",
+    "postcss-import": "^14.0.2",
+    "postcss-media-minmax": "^5.0.0",
+    "postcss-preset-env": "^7.0.1",
+    "postcss-sort-media-queries": "^4.2.1",
+    "typescript": "^4.4.3",
+    "vite": "^2.6.4",
+    "vue-tsc": "^0.3.0"
+  }
+}

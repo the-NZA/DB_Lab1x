@@ -1,0 +1,31 @@
+.edfields {
+	display: grid;
+	grid-auto-rows: min-content;
+	gap: var(--offset);
+
+	overflow-y: scroll;
+	max-height: 80vh;
+}
+
+.edfields__field {
+	display: flex;
+	flex-direction: column;
+}
+
+.edfields__label {
+	font-weight: bold;
+	margin-bottom: var(--offset-quarter);
+}
+
+.edfields__input {
+	padding: var(--offset-half) ;
+	box-sizing: border-box;
+	border-radius: var(--offset-quarter);
+	border: 1px solid rgb(var(--greyblue));
+}
+
+.edfields__textarea {
+	padding: var(--offset-half);
+	resize: vertical;
+	min-height: calc(var(--site-width) / 10);
+}
