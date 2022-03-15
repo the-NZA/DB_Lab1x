@@ -9,9 +9,10 @@ import (
 type User struct {
 	ID             string `json:"id" db:"id"`
 	Username       string `json:"username" db:"username"`
-	HashedPassword string `json:"-" db:"password"`
+	HashedPassword string `json:"-" db:"passwd"`
 	Email          string `json:"email" db:"email"`
 	IsAdmin        bool   `json:"is_admin" db:"is_admin"`
+	Deleted        bool   `json:"deleted" db:"deleted"`
 }
 
 func (u User) Validate() error {
