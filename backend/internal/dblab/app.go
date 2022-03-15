@@ -44,7 +44,13 @@ func (a *App) configureRouter() {
 		AllowCredentials: false,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
+
 	a.router.Get("/", a.handleIndexPage())
+
+	a.router.Route("/auth", func(r chi.Router) {
+		r.Post("/login", a.handleLogin())
+		r.Post("/signup", a.handleRegister())
+	})
 
 	a.router.Route("/api", func(r chi.Router) {
 		r.Get("/", func(w http.ResponseWriter, r *http.Request) {
