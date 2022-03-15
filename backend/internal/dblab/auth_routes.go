@@ -3,6 +3,8 @@ package dblab
 import (
 	"encoding/json"
 	"net/http"
+
+	"github.com/the-NZA/DB_Lab1x/backend/internal/models"
 )
 
 // handles POST /auth/login
@@ -32,37 +34,42 @@ func (a *App) handleLogin() http.HandlerFunc {
 			return
 		}
 
-		a.respond(w, r, http.StatusCreated, user)
-		// a.respond(w, r, http.StatusOK, "Login successful")
+		a.respond(w, r, http.StatusOK, user)
 	}
 }
 
 // handles POST /auth/signup
 func (a *App) handleRegister() http.HandlerFunc {
+	type reqRegister struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+		Email    string `json:"email"`
+	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		// var (
-		// 	req models.BookWithAuthors
-		// 	err error
-		// )
+		var (
+			req  reqRegister
+			user models.User
+			err  error
+		)
 
-		// if err = json.NewDecoder(r.Body).Decode(&req); err != nil {
-		// 	a.logger.Logf("[INFO] During body parse: %v\n", err)
-		// 	a.error(w, r, http.StatusBadRequest, err)
-		// 	return
-		// }
+		if err = json.NewDecoder(r.Body).Decode(&req); err != nil {
+			a.logger.Logf("[INFO] During body parse: %v\n", err)
+			a.error(w, r, http.StatusBadRequest, err)
+			return
+		}
 
-		// // Reset book ID
-		// req.Book.ID = ""
+		user.Username = req.Username
+		user.Email = req.Email
+		user.HashPassword(req.Password)
 
-		// // Try save new book with authors IDs
-		// req, err = a.services.BookService().Add(req)
-		// if err != nil {
-		// 	a.logger.Logf("[INFO] During book saving: %v\n", err)
-		// 	a.error(w, r, http.StatusInternalServerError, err)
-		// 	return
-		// }
+		// Try create new user
+		user, err = a.services.AuthService().Register(user)
+		if err != nil {
+			a.logger.Logf("[INFO] During user creating: %v\n", err)
+			a.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
 
-		// a.respond(w, r, http.StatusCreated, req)
-		a.respond(w, r, http.StatusOK, "Register")
+		a.respond(w, r, http.StatusCreated, user)
 	}
 }

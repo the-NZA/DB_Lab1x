@@ -29,5 +29,9 @@ func (a *AuthService) Login(username string, password string) (models.User, erro
 }
 
 func (a *AuthService) Register(user models.User) (models.User, error) {
+	if err := user.Validate(); err != nil {
+		return user, err
+	}
+
 	return a.repository.Add(user)
 }
