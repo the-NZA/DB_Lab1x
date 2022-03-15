@@ -56,24 +56,29 @@ watch(() => route.params, async () => {
 
 	<header class="app-header">
 		<div class="header wrapper">
-			<div class="header__intro">
-				<h1 class="header__title">Лабораторная работа №1</h1>
-				<h3 class="header__subtitle">
-					По дисциплине "Программирование и администрирование в
-					среде"
-				</h3>
-			</div>
-
 			<nav class="header__nav">
-				<router-link to="/">Главная</router-link>
 				<router-link to="/books">Книги</router-link>
 				<router-link to="/genres">Жанры</router-link>
 				<router-link to="/authors">Авторы</router-link>
 			</nav>
+
+			<div class="header__logo">
+				<h1 class="header__title">
+					<router-link to="/">BOOINK</router-link>
+				</h1>
+			</div>
+
+			<nav class="header__auth">
+				<router-link to="/login">Логин</router-link>
+				<router-link to="/signup">Регистрация</router-link>
+			</nav>
 		</div>
 	</header>
 
-	<main class="app-main wrapper" :class="{ 'grid-main': isNotHomePage }">
+	<main
+		class="app-main wrapper"
+		:class="{ 'grid-main': isNotHomePage, 'app-main-homegrid': !isNotHomePage }"
+	>
 		<router-view></router-view>
 	</main>
 
@@ -120,6 +125,12 @@ watch(() => route.params, async () => {
 
 .app-footer--margin-top {
 	margin-top: var(--offset);
+}
+
+.app-main-homegrid {
+	display: grid;
+	grid-template-rows: repeat(2, min-content);
+	gap: var(--offset);
 }
 
 .grid-main {
