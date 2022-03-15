@@ -11,6 +11,10 @@ const isNotHomePage = computed(() => {
 	return route.fullPath !== "/";
 })
 
+const isLoginOrSignUpPage = computed(() => {
+	return route.fullPath === "/login" || route.fullPath === "/signup"
+})
+
 const isLoaded = ref(false)
 
 // onBeforeMount(async () => {
@@ -77,7 +81,7 @@ watch(() => route.params, async () => {
 
 	<main
 		class="app-main wrapper"
-		:class="{ 'grid-main': isNotHomePage, 'app-main-homegrid': !isNotHomePage }"
+		:class="{ 'grid-main': isNotHomePage, 'app-main-homegrid': !isNotHomePage, 'login-main': isLoginOrSignUpPage }"
 	>
 		<router-view></router-view>
 	</main>
@@ -137,5 +141,13 @@ watch(() => route.params, async () => {
 	display: grid;
 	grid-template-rows: max-content 1fr;
 	gap: var(--offset);
+}
+
+.login-main {
+	grid-template-rows: 1fr;
+	gap: 0;
+
+	justify-content: center;
+	align-items: center;
 }
 </style>

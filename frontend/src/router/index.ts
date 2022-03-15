@@ -4,6 +4,7 @@ import Homepage from "../views/Homepage.vue"
 import Bookspage from "../views/Bookspage.vue"
 import Genrespage from "../views/Genrespage.vue"
 import Authorspage from "../views/Authorspage.vue"
+import Loginpage from "../views/Loginpage.vue"
 
 const routes: RouteRecordRaw[] = [
 	{
@@ -25,6 +26,16 @@ const routes: RouteRecordRaw[] = [
 		path: '/authors',
 		name: 'Authors',
 		component: Authorspage,
+	},
+	{
+		path: '/login',
+		name: 'Login',
+		component: Loginpage,
+	},
+	{
+		path: '/signup',
+		name: 'Signup',
+		component: Loginpage,
 	},
 ]
 
