@@ -17,6 +17,7 @@ type SQLiteStore struct {
 	books        storer.BookReporsitory
 	authors      storer.AuthorRepository
 	genres       storer.GenreRepository
+	users        storer.UserRepository
 	booksAuthors storer.BookAuthorRepository
 }
 
@@ -42,6 +43,14 @@ func (s *SQLiteStore) Genres() storer.GenreRepository {
 	}
 
 	return s.genres
+}
+
+func (s *SQLiteStore) Users() storer.UserRepository {
+	if s.users == nil {
+		s.users = &UserRepository{db: s.db}
+	}
+
+	return s.users
 }
 
 func (s *SQLiteStore) BooksAuthors() storer.BookAuthorRepository {

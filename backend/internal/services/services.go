@@ -11,6 +11,7 @@ type Services struct {
 	books       BookServicer
 	genres      GenreServicer
 	authors     AuthorServicer
+	auth        AuthServicer
 	bookAuthors BooksAuthorsServicer
 }
 
@@ -48,6 +49,16 @@ func (s *Services) GenreService() GenreServicer {
 	}
 
 	return s.genres
+}
+
+func (s *Services) AuthService() AuthServicer {
+	if s.auth == nil {
+		s.auth = &AuthService{
+			repository: s.store.Users(),
+		}
+	}
+
+	return s.auth
 }
 
 func (s *Services) BooksAuthors() BooksAuthorsServicer {

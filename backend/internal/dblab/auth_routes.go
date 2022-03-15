@@ -1,36 +1,39 @@
 package dblab
 
 import (
+	"encoding/json"
 	"net/http"
 )
 
 // handles POST /auth/login
 func (a *App) handleLogin() http.HandlerFunc {
+	type reqLogin struct {
+		Username string `json:"username"`
+		Password string `json:"password"`
+	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
-		// var (
-		// 	req models.BookWithAuthors
-		// 	err error
-		// )
+		var (
+			req reqLogin
+			err error
+		)
 
-		// if err = json.NewDecoder(r.Body).Decode(&req); err != nil {
-		// 	a.logger.Logf("[INFO] During body parse: %v\n", err)
-		// 	a.error(w, r, http.StatusBadRequest, err)
-		// 	return
-		// }
+		if err = json.NewDecoder(r.Body).Decode(&req); err != nil {
+			a.logger.Logf("[INFO] During body parse: %v\n", err)
+			a.error(w, r, http.StatusBadRequest, err)
+			return
+		}
 
-		// // Reset book ID
-		// req.Book.ID = ""
+		// Try login user
+		user, err := a.services.AuthService().Login(req.Username, req.Password)
+		if err != nil {
+			a.logger.Logf("[INFO] During user login: %v\n", err)
+			a.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
 
-		// // Try save new book with authors IDs
-		// req, err = a.services.BookService().Add(req)
-		// if err != nil {
-		// 	a.logger.Logf("[INFO] During book saving: %v\n", err)
-		// 	a.error(w, r, http.StatusInternalServerError, err)
-		// 	return
-		// }
-
-		// a.respond(w, r, http.StatusCreated, req)
-		a.respond(w, r, http.StatusOK, "Login")
+		a.respond(w, r, http.StatusCreated, user)
+		// a.respond(w, r, http.StatusOK, "Login successful")
 	}
 }
 

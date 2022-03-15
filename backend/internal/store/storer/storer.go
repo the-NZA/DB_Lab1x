@@ -11,5 +11,6 @@ type Storer interface {
 	Authors() AuthorRepository
 	Genres() GenreRepository
 	BooksAuthors() BookAuthorRepository
+	Users() UserRepository
 	Close() error
 }

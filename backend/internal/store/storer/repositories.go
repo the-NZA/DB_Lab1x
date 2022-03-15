@@ -29,3 +29,8 @@ type GenreRepository interface {
 type BookAuthorRepository interface {
 	GetByIDs(string, string) ([]models.BookAuthor, error)
 }
+
+type UserRepository interface {
+	GetByUsername(string) (models.User, error)
+	Add(models.User) (models.User, error)
+}

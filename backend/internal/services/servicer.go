@@ -7,6 +7,7 @@ type Servicer interface {
 	GenreService() GenreServicer
 	AuthorService() AuthorServicer
 	BooksAuthors() BooksAuthorsServicer
+	AuthService() AuthServicer
 	Close() error
 }
 
@@ -36,4 +37,9 @@ type GenreServicer interface {
 
 type BooksAuthorsServicer interface {
 	GetByIDs(string, string) ([]models.BookAuthor, error)
+}
+
+type AuthServicer interface {
+	Login(username string, password string) (models.User, error)
+	Register(models.User) (models.User, error)
 }
