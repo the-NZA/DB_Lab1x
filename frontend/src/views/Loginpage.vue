@@ -5,17 +5,17 @@
 		<form @submit.prevent="onFormSubmit" class="login__form">
 			<div class="login__formgroup">
 				<label for="username">Имя пользователя</label>
-				<input type="text" id="username" required />
+				<input type="text" v-model="username" id="username" required />
 			</div>
 
 			<div class="login__formgroup">
 				<label for="password">Пароль</label>
-				<input type="password" id="password" required />
+				<input type="password" v-model="password" id="password" required />
 			</div>
 
 			<div v-if="isSignUp" class="login__formgroup">
 				<label for="email">Email(Опционально)</label>
-				<input id="email" type="email" />
+				<input id="email" v-model="email" type="email" />
 			</div>
 
 			<button class="login__button">Войти</button>
@@ -24,10 +24,15 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from "vue";
-import { useRoute } from "vue-router";
+import { computed, ref } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useStore } from "../store/index";
+import { AUTH } from "../HTTP";
+import { User, LoginBody, RegisterBody } from "../types/index"
 
+const router = useRouter()
 const route = useRoute()
+const store = useStore()
 
 const isSignUp = computed(() => {
 	return route.fullPath === "/signup"
@@ -37,9 +42,53 @@ const pageTitle = computed(() => {
 	return isSignUp.value ? "Регистрация" : "Авторизация"
 })
 
-const onFormSubmit = (e: Event) => {
-	console.log("submited");
+const username = ref<string>("")
+const password = ref<string>("")
+const email = ref<string>("")
+
+const onFormSubmit = async (e: Event) => {
+	if (isSignUp.value) {
+		try {
+			// login
+			const res = await AUTH<User, RegisterBody>({
+				username: username.value,
+				password: password.value,
+				email: email.value,
+			}, "/auth/signup")
+
+			// save and login new user
+			store.setLogin(true, res)
+
+		}
+		catch (err) {
+			console.error(err);
+			// display error
+			return
+		}
+	} else {
+		try {
+			// login
+			const res = await AUTH<User, LoginBody>({
+				username: username.value,
+				password: password.value,
+			}, "/auth/login")
+
+			// save logined user
+			store.setLogin(true, res)
+		}
+		catch (err) {
+			console.error(err);
+			// display error
+			return
+		}
+	}
+
+	// go to home page
+	router.push({
+		name: "Home"
+	})
 }
+
 </script>
 
 <style scoped>

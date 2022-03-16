@@ -39,3 +39,22 @@ export type BookWithAuthors = {
 	book: Book,
 	authors_ids: string[],
 }
+
+export type User = {
+	id: string,
+	username: string,
+	email: string,
+	is_admin: boolean,
+	deleted: boolean,
+}
+
+export type LoginBody = {
+	username: string,
+	password: string,
+}
+
+export type RegisterBody= {
+	username: string,
+	password: string,
+	email: string,
+}

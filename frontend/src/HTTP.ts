@@ -21,9 +21,9 @@ export async function GET<T>(url: string, base?: string): Promise<T> {
 export async function POST<T>(body: T, url: string, base?: string): Promise<T> {
 	const response = await fetch(getURLString(url, base), {
 		method: "POST",
-		headers: { 
-			'Accept': 'application/json', 
-			'Content-Type': 'application/json' 
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(body)
 	})
@@ -33,16 +33,36 @@ export async function POST<T>(body: T, url: string, base?: string): Promise<T> {
 		throw new Error(response.statusText)
 	}
 
-	const res =  await (response.json() as Promise<T>)
-	return res 
+	const res = await (response.json() as Promise<T>)
+	return res
+}
+
+export async function AUTH<T, R>(body: R, url: string, base?: string): Promise<T> {
+	const response = await fetch(getURLString(url, base), {
+		method: "POST",
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(body)
+	})
+	
+	if (!response.ok) {
+		console.log(response);
+
+		throw new Error(response.statusText)
+	}
+
+	const res = await (response.json() as Promise<T>)
+	return res
 }
 
 export async function PUT<T>(body: T, url: string, base?: string): Promise<T> {
 	const response = await fetch(getURLString(url, base), {
 		method: "PUT",
-		headers: { 
-			'Accept': 'application/json', 
-			'Content-Type': 'application/json' 
+		headers: {
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
 		},
 		body: JSON.stringify(body)
 	})
@@ -52,11 +72,11 @@ export async function PUT<T>(body: T, url: string, base?: string): Promise<T> {
 		throw new Error(response.statusText)
 	}
 
-	const res =  await (response.json() as Promise<T>)
-	return res 
+	const res = await (response.json() as Promise<T>)
+	return res
 }
 
-export async function DELETE(url: string, base?: string): Promise<Response>  {
+export async function DELETE(url: string, base?: string): Promise<Response> {
 	return await fetch(getURLString(url, base), {
 		method: "DELETE",
 	});

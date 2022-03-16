@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { Book, Genre, Author, BookAuthor, BookWithAuthors, AuthorWithBooks } from "../types";
+import { Book, Genre, Author, BookAuthor, BookWithAuthors, AuthorWithBooks, User } from "../types";
 import { GET, POST, PUT, DELETE } from "../HTTP"
 import { AuthorRow, BookRow, GenreRow } from "../types/grid";
 
@@ -15,6 +15,8 @@ export const useStore = defineStore("main", {
 		booksAuthorsLoaded: false,
 		errMessage: "",
 		isError: false,
+		logined: false,
+		user: {} as User,
 	}),
 	getters: {
 		getErrMessage(): string {
@@ -31,6 +33,16 @@ export const useStore = defineStore("main", {
 		},
 		isAuthorsLoaded(): boolean {
 			return this.authorsLoaded
+		},
+		isLogined(): boolean {
+			return this.logined
+		},
+		isAdmin(): boolean {
+			if(!this.logined) {
+				return false
+			}
+
+			return this.user.is_admin
 		},
 		getBooks(): Book[] {
 			return this.books
@@ -169,6 +181,30 @@ export const useStore = defineStore("main", {
 		setErrorWithMessage(status: boolean, msg?: string) {
 			this.isError = status
 			this.errMessage = msg ? msg : ""
+		},
+
+		/* AUTH */
+		setLogin(status: boolean, user?: User) {
+			this.logined = status
+
+			if(status && user) {
+				this.user = user
+				localStorage.setItem("booink_user", JSON.stringify(user))
+			}
+
+			// remove info about previous login
+			if (!status) {
+				localStorage.removeItem("booink_user")
+			}
+		},
+		tryReLogin() {
+			const loginInfo = localStorage.getItem("booink_user")
+
+			// restore information about user 
+			if (typeof loginInfo === 'string') {
+				const user: User = JSON.parse(loginInfo)
+				this.setLogin(true, user)
+			}
 		},
 
 		/* BOOKS */

@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, watch, onBeforeMount, onMounted, computed } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "./store/index";
 import Loader from "./components/Loader.vue";
 
+const router = useRouter()
 const route = useRoute()
-const store = useStore();
+const store = useStore()
 
 const isNotHomePage = computed(() => {
 	return route.fullPath !== "/";
@@ -15,7 +16,16 @@ const isLoginOrSignUpPage = computed(() => {
 	return route.fullPath === "/login" || route.fullPath === "/signup"
 })
 
+const logOut = () => {
+	store.setLogin(false)
+
+	router.push({
+		name: "Home"
+	})
+}
+
 const isLoaded = ref(false)
+
 
 // onBeforeMount(async () => {
 // 	isLoaded.value = false;
@@ -32,6 +42,11 @@ const isLoaded = ref(false)
 
 // 	isLoaded.value = true;
 // });
+
+// Try to relogin last session
+onBeforeMount(() => {
+	store.tryReLogin()
+})
 
 // Reload data when page changed
 watch(() => route.params, async () => {
@@ -72,10 +87,19 @@ watch(() => route.params, async () => {
 				</h1>
 			</div>
 
-			<nav class="header__auth">
+			<nav v-if="!store.isLogined" class="header__auth">
 				<router-link to="/login">Логин</router-link>
 				<router-link to="/signup">Регистрация</router-link>
 			</nav>
+
+			<div v-else class="header__userinfo">
+				<p>
+					Пользователь:
+					<span>{{ store.user.username }}</span>
+				</p>
+
+				<button @click="logOut">Выйти</button>
+			</div>
 		</div>
 	</header>
 
