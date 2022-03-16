@@ -2,7 +2,9 @@ package dblab
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/the-NZA/DB_Lab1x/backend/internal/models"
 )
@@ -45,6 +47,7 @@ func (a *App) handleRegister() http.HandlerFunc {
 		Password string `json:"password"`
 		Email    string `json:"email"`
 	}
+
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
 			req  reqRegister
@@ -54,6 +57,14 @@ func (a *App) handleRegister() http.HandlerFunc {
 
 		if err = json.NewDecoder(r.Body).Decode(&req); err != nil {
 			a.logger.Logf("[INFO] During body parse: %v\n", err)
+			a.error(w, r, http.StatusBadRequest, err)
+			return
+		}
+
+		// lazy check password for emptyness
+		if len(strings.TrimSpace(req.Password)) < 8 {
+			err := fmt.Errorf("Password must have at least 8 non-white characters")
+			a.logger.Logf("[INFO] Check password length: %v\n", err)
 			a.error(w, r, http.StatusBadRequest, err)
 			return
 		}
