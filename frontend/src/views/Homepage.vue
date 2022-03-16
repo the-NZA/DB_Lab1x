@@ -19,11 +19,30 @@
 				class="sectionHeader__subtitle"
 			>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Facere aut vitae sed. Saepe, ab porro quibusdam impedit explicabo beatae vel?</p>
 		</div>
-		<div class="books__cards">SELECT * FROM books ORDER BY RANDOM() LIMIT 3;</div>
+
+		<div class="books__cards">
+			<book-card v-for="book in randomBooks" :book="book"></book-card>
+		</div>
 	</section>
 </template>
 
 <script lang="ts" setup>
+import BookCard from "../components/BookCard.vue"
+import { onBeforeMount, reactive, ref } from 'vue';
+import { GET } from '../HTTP';
+import { Book } from '../types';
+
+let randomBooks = ref<Book[]>([])
+
+onBeforeMount(async () => {
+	try {
+		const res = await GET<Book[]>("api/book/random3");
+		randomBooks.value = res
+
+	} catch (err) {
+		console.error(err);
+	}
+})
 </script>
 
 <style scoped>
@@ -52,5 +71,11 @@ section {
 	border: 4px solid rgb(var(--greyblue));
 	border-radius: calc(var(--offset-half) / 2);
 	padding: var(--offset);
+}
+
+.books__cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--offset);
 }
 </style>
