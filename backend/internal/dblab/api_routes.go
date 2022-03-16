@@ -115,6 +115,21 @@ func (a *App) handleBookDelete() http.HandlerFunc {
 	}
 }
 
+// handles GET /api/book/random3
+func (a *App) handleBookGetRandom3() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		// Try get all books
+		books, err := a.services.BookService().GetRandom3()
+		if err != nil {
+			a.logger.Logf("[INFO] During 3 random books getting: %v\n", err)
+			a.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		a.respond(w, r, http.StatusOK, books)
+	}
+}
+
 // handles GET /api/book/all
 func (a *App) handleBookGetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {

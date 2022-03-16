@@ -16,6 +16,7 @@ type BookServicer interface {
 	Add(models.BookWithAuthors) (models.BookWithAuthors, error)
 	Update(models.BookWithAuthors) (models.BookWithAuthors, error)
 	Delete(string) error
+	GetRandom3() ([]models.Book, error)
 	GetAll() ([]models.Book, error)
 }
 

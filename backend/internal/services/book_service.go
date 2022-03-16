@@ -35,6 +35,9 @@ func (b *BookService) Delete(ID string) error {
 	return b.repository.Delete(ID)
 }
 
+func (b *BookService) GetRandom3() ([]models.Book, error) {
+	return b.repository.GetRandom3()
+}
 func (b *BookService) GetAll() ([]models.Book, error) {
 	return b.repository.GetAll()
 }

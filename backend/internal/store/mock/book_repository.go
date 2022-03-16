@@ -123,7 +123,16 @@ func (b BookRepository) Delete(ID string) error {
 	return nil
 }
 
-// Gell all books from books
+// Get 3 random books from books
+func (b BookRepository) GetRandom3() ([]models.Book, error) {
+	if len(books) < 1 {
+		return nil, fmt.Errorf("Books not found")
+	}
+
+	return books[0:3], nil
+}
+
+// Get all books from books
 func (b BookRepository) GetAll() ([]models.Book, error) {
 	if len(books) < 1 {
 		return nil, fmt.Errorf("Books not found")

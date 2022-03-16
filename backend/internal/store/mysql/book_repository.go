@@ -175,7 +175,20 @@ func (b *BookRepository) Delete(ID string) error {
 	return nil
 }
 
-// Gell all books from books
+// Get 3 random books from books table
+func (b *BookRepository) GetRandom3() ([]models.Book, error) {
+	var books []models.Book
+
+	// Get all books from database
+	err := b.db.Select(&books, "SELECT * FROM books WHERE deleted != true ORDER BY RAND() LIMIT 3")
+	if err != nil {
+		return nil, err
+	}
+
+	return books, nil
+}
+
+// Get all books from books
 func (b *BookRepository) GetAll() ([]models.Book, error) {
 	var books []models.Book
 

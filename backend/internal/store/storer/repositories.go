@@ -8,6 +8,7 @@ type BookReporsitory interface {
 	Update(models.BookWithAuthors) (models.BookWithAuthors, error)
 	Delete(string) error
 	GetAll() ([]models.Book, error)
+	GetRandom3() ([]models.Book, error)
 }
 
 type AuthorRepository interface {
