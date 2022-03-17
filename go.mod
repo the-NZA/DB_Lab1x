@@ -10,9 +10,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/jmoiron/sqlx v1.3.4
 	github.com/mattn/go-sqlite3 v1.14.12
+	golang.org/x/crypto v0.0.0-20220314234724-5d542ad81a58
 )
 
-require (
-	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
-	golang.org/x/crypto v0.0.0-20220314234724-5d542ad81a58 // indirect
-)
+require github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
