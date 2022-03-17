@@ -38,6 +38,11 @@ func (b *BookService) Delete(ID string) error {
 func (b *BookService) GetRandom3() ([]models.Book, error) {
 	return b.repository.GetRandom3()
 }
+
+func (b *BookService) Search(title, author, genre string) ([]models.Book, error) {
+	return b.repository.Search(title, author, genre)
+}
+
 func (b *BookService) GetAll() ([]models.Book, error) {
 	return b.repository.GetAll()
 }

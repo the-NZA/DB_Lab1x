@@ -200,3 +200,16 @@ func (b *BookRepository) GetAll() ([]models.Book, error) {
 
 	return books, nil
 }
+
+// Search books by title, author and genre from books
+func (b *BookRepository) Search(title, author, genre string) ([]models.Book, error) {
+	var books []models.Book
+
+	// Get all books from database
+	err := b.db.Select(&books, "SELECT * FROM books WHERE deleted != true")
+	if err != nil {
+		return nil, err
+	}
+
+	return books, nil
+}

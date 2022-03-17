@@ -6,8 +6,8 @@ type Servicer interface {
 	BookService() BookServicer
 	GenreService() GenreServicer
 	AuthorService() AuthorServicer
-	BooksAuthors() BooksAuthorsServicer
 	AuthService() AuthServicer
+	BooksAuthors() BooksAuthorsServicer
 	Close() error
 }
 
@@ -18,6 +18,7 @@ type BookServicer interface {
 	Delete(string) error
 	GetRandom3() ([]models.Book, error)
 	GetAll() ([]models.Book, error)
+	Search(title, author, genre string) ([]models.Book, error)
 }
 
 type AuthorServicer interface {
@@ -41,6 +42,6 @@ type BooksAuthorsServicer interface {
 }
 
 type AuthServicer interface {
-	Login(username string, password string) (models.User, error)
+	Login(username, password string) (models.User, error)
 	Register(models.User) (models.User, error)
 }

@@ -9,6 +9,7 @@ type BookReporsitory interface {
 	Delete(string) error
 	GetAll() ([]models.Book, error)
 	GetRandom3() ([]models.Book, error)
+	Search(title, author, genre string) ([]models.Book, error)
 }
 
 type AuthorRepository interface {

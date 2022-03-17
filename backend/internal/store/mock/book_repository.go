@@ -140,3 +140,12 @@ func (b BookRepository) GetAll() ([]models.Book, error) {
 
 	return books, nil
 }
+
+// Get all books from books
+func (b BookRepository) Search(title, author, genre string) ([]models.Book, error) {
+	if len(books) < 1 {
+		return nil, fmt.Errorf("Books not found")
+	}
+
+	return books, nil
+}

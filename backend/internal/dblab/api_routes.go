@@ -130,6 +130,29 @@ func (a *App) handleBookGetRandom3() http.HandlerFunc {
 	}
 }
 
+// handle /api/book/search?title=Title&author=Author&genre=Genre
+func (a *App) handleBookSearch() http.HandlerFunc {
+	const (
+		titleParam  = "title"
+		authorParam = "author"
+		genreParam  = "genre"
+	)
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		title := r.URL.Query().Get(titleParam)
+		author := r.URL.Query().Get(authorParam)
+		genre := r.URL.Query().Get(genreParam)
+
+		books, err := a.services.BookService().Search(title, author, genre)
+		if err != nil {
+			a.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		a.respond(w, r, http.StatusOK, books)
+	}
+}
+
 // handles GET /api/book/all
 func (a *App) handleBookGetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -384,19 +407,6 @@ func (a *App) handleGetBookAuthor() http.HandlerFunc {
 	)
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		// hasAuthorID := r.URL.Query().Has(authorParam)
-		// hasBookID := r.URL.Query().Has(bookParam)
-
-		// if !hasAuthorID && !hasBookID {
-		// 	a.error(w, r, http.StatusBadRequest, ErrNoQueryParams)
-		// 	return
-		// }
-
-		// if hasAuthorID && len(authorID) == 0 || hasBookID && len(bookID) == 0 {
-		// 	a.error(w, r, http.StatusBadRequest, ErrLenQueryParams)
-		// 	return
-		// }
-
 		authorID := r.URL.Query().Get(authorParam)
 		bookID := r.URL.Query().Get(bookParam)
 
