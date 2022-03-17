@@ -69,6 +69,7 @@ func (a *App) configureRouter() {
 			r.Delete("/{bookID}", a.handleBookDelete())
 			r.Get("/all", a.handleBookGetAll())
 			r.Get("/random3", a.handleBookGetRandom3())
+			r.Get("/search", a.handleBookSearch())
 		})
 
 		// Genres endpoints

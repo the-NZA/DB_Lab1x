@@ -1,6 +1,7 @@
 package sqlite3
 
 import (
+	"fmt"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -203,10 +204,46 @@ func (b *BookRepository) GetAll() ([]models.Book, error) {
 
 // Search books by title, author and genre from books
 func (b *BookRepository) Search(title, author, genre string) ([]models.Book, error) {
+	if len(title) > 0 {
+		return b.searchByTitle(title)
+	} else if len(author) > 0 {
+		return b.searchByAuthor(author)
+	} else if len(genre) > 0 {
+		return b.searchByGenre(genre)
+	} else {
+		return []models.Book{}, fmt.Errorf("Unsupported search param")
+	}
+}
+
+func (b *BookRepository) searchByTitle(title string) ([]models.Book, error) {
 	var books []models.Book
 
 	// Get all books from database
-	err := b.db.Select(&books, "SELECT * FROM books WHERE deleted != true")
+	err := b.db.Select(&books, "SELECT * FROM books WHERE deleted != true AND title LIKE '%'||?||'%'", title)
+	if err != nil {
+		return nil, err
+	}
+
+	return books, nil
+}
+
+func (b *BookRepository) searchByAuthor(author string) ([]models.Book, error) {
+	var books []models.Book
+
+	// Get all books from database
+	err := b.db.Select(&books, "select b.id, b.title, b.snippet, b.pages_cnt, b.pub_year, b.deleted, b.genre_id from books b join books_authors ba on b.id = ba.book_id join authors au on ba.author_id = au.id where au.lastname like '%'||?||'%'", author)
+	if err != nil {
+		return nil, err
+	}
+
+	return books, nil
+}
+
+func (b *BookRepository) searchByGenre(genre string) ([]models.Book, error) {
+	var books []models.Book
+
+	// Get all books from database
+	err := b.db.Select(&books, "select b.id, b.title, b.snippet, b.pages_cnt, b.pub_year, b.deleted, b.genre_id from books b join genres g on b.genre_id = g.id where g.title like '%'||?||'%'", genre)
 	if err != nil {
 		return nil, err
 	}
