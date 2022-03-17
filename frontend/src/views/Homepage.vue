@@ -68,8 +68,15 @@ onBeforeMount(async () => {
 	}
 })
 
-const onFormSubmit = () => {
-	console.log("searched");
+const onFormSubmit = async () => {
+	try {
+		const res = await GET<Book[]>(`api/book/search?${searchBy.value}=${searchQuery.value}`);
+		console.log(res);
+
+
+	} catch (err) {
+		console.error(err);
+	}
 }
 </script>
 
