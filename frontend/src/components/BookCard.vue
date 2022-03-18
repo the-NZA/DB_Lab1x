@@ -2,16 +2,26 @@
 	<div class="bookCard">
 		<h3 class="bookCard__title">{{ book.title }}</h3>
 		<p class="bookCard__snippet">{{ book.snippet }}</p>
-		<button class="bookCard__button">Смотреть</button>
+
+		<button @click="handleButtonClick" class="bookCard__button">Смотреть</button>
 	</div>
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router';
 import { Book } from '../types';
 
+const router = useRouter()
 const props = defineProps<{
 	book: Book,
 }>()
+
+const handleButtonClick = () => {
+	router.push({
+		name: "SingleBook",
+		params: { "bookId": props.book.id }
+	})
+}
 
 // const props = defineProps({
 // 	book: {

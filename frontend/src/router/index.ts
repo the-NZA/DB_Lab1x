@@ -5,6 +5,7 @@ import Bookspage from "../views/Bookspage.vue"
 import Genrespage from "../views/Genrespage.vue"
 import Authorspage from "../views/Authorspage.vue"
 import Loginpage from "../views/Loginpage.vue"
+import SingleBookpage from "../views/SingleBookpage.vue"
 
 const routes: RouteRecordRaw[] = [
 	{
@@ -16,6 +17,11 @@ const routes: RouteRecordRaw[] = [
 		path: '/books',
 		name: 'Books',
 		component: Bookspage,
+	},
+	{
+		path: '/books/:bookId',
+		name: 'SingleBook',
+		component: SingleBookpage,
 	},
 	{
 		path: '/genres',
