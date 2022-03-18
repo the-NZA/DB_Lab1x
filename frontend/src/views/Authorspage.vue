@@ -1,27 +1,31 @@
 <template>
-	<actions-buttons
-		:canEdit="singleSelected"
-		:canDelete="hasSelected"
-		@add-pressed="handleAdd"
-		@edit-pressed="handleEdit"
-		@delete-pressed="handleDelete"
-	></actions-buttons>
+	<template v-if="store.isAdmin">
+		<actions-buttons
+			:canEdit="singleSelected"
+			:canDelete="hasSelected"
+			@add-pressed="handleAdd"
+			@edit-pressed="handleEdit"
+			@delete-pressed="handleDelete"
+		></actions-buttons>
 
-	<ag-grid-vue
-		style="width: 100%; height: 100%;"
-		class="ag-theme-alpine"
-		:gridOptions="gridOptions"
-		:context="actionContext"
-		:rowData="getAuthorsRows"
-	></ag-grid-vue>
+		<ag-grid-vue
+			style="width: 100%; height: 100%;"
+			class="ag-theme-alpine"
+			:gridOptions="gridOptions"
+			:context="actionContext"
+			:rowData="getAuthorsRows"
+		></ag-grid-vue>
 
-	<modal-view :showModal="showModal">
-		<author-editor
-			:author_id="selectedAuthorID"
-			@savePressed="handleSaveAuthor"
-			@closePressed="handleCloseModal"
-		/>
-	</modal-view>
+		<modal-view :showModal="showModal">
+			<author-editor
+				:author_id="selectedAuthorID"
+				@savePressed="handleSaveAuthor"
+				@closePressed="handleCloseModal"
+			/>
+		</modal-view>
+	</template>
+
+	<template v-else>just authors</template>
 </template>
 
 <script lang="ts" setup>
