@@ -61,8 +61,6 @@ import {
 	SelectionChangedEvent,
 } from "@ag-grid-community/all-modules";
 import { GenreRow } from "../types/grid";
-import { Book } from "../types";
-import { GET } from "../HTTP";
 
 const store = useStore();
 const { isGenresLoaded, getGenresRows, getGenres } = storeToRefs(store);
@@ -71,9 +69,6 @@ const router = useRouter()
 
 const handleSearch = async (searchBy: string, searchQuery: string) => {
 	try {
-		// const res = await GET<Book[]>(`api/book/search?${searchBy}=${searchQuery}`);
-		// Need to redirect to /books with given res as payload
-		// console.log(res);
 		router.push({
 			name: "Books",
 			query: {
@@ -81,8 +76,6 @@ const handleSearch = async (searchBy: string, searchQuery: string) => {
 				searchQuery: searchQuery,
 			}
 		})
-
-		// searchedBooks.value = res
 
 	} catch (err) {
 		console.error(err);

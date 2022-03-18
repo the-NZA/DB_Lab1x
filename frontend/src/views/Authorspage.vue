@@ -25,10 +25,25 @@
 		</modal-view>
 	</template>
 
-	<template v-else>just authors</template>
+	<template v-else>
+		<section class="search sectionMain">
+			<search-form @searchSubmitted="handleSearch"></search-form>
+		</section>
+
+		<section class="authors sectionMain">
+			<div class="authors__cards">
+				<div class="authors__card" v-for="author in getAuthors">
+					<h3 class="authors__cardtitle">
+						<a href="#">{{ `${author.lastname} ${author.surname} ${author.firstname}` }}</a>
+					</h3>
+				</div>
+			</div>
+		</section>
+	</template>
 </template>
 
 <script lang="ts" setup>
+import SearchForm from '../components/SearchForm.vue';
 import { ref, reactive, onBeforeMount, computed } from "vue";
 import { useStore } from "../store";
 import { storeToRefs } from "pinia";
@@ -45,10 +60,28 @@ import {
 	SelectionChangedEvent,
 } from "@ag-grid-community/all-modules";
 import { AuthorRow } from "../types/grid";
+import { useRouter } from 'vue-router';
 
 // Reactive vars from store
 const store = useStore();
-const { isAuthorsLoaded, getAuthorsRows } = storeToRefs(store);
+const { isAuthorsLoaded, getAuthorsRows, getAuthors } = storeToRefs(store);
+
+const router = useRouter()
+
+const handleSearch = async (searchBy: string, searchQuery: string) => {
+	try {
+		router.push({
+			name: "Books",
+			query: {
+				searchBy: searchBy,
+				searchQuery: searchQuery,
+			}
+		})
+
+	} catch (err) {
+		console.error(err);
+	}
+}
 
 // Context for action buttons
 const actionContext = ref({});
@@ -213,5 +246,31 @@ onBeforeMount(() => {
 });
 </script>
 
-<style>
+<style scoped>
+.authors__cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--offset);
+}
+
+.authors__card {
+	background-color: rgb(var(--leanen));
+	box-shadow: var(--main-shadow);
+}
+
+.authors__cardtitle {
+	margin: 0;
+	padding: var(--offset);
+}
+
+.authors__cardtitle a {
+	text-decoration: none;
+	color: rgb(var(--sapphire));
+	transition: var(--main-transition);
+}
+
+.authors__cardtitle a:hover {
+	text-decoration: underline;
+	color: rgb(var(--redsand));
+}
 </style>
