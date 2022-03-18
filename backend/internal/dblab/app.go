@@ -100,6 +100,12 @@ func (a *App) configureRouter() {
 			r.Get("/all", a.handleAuthorGetAll())
 		})
 
+		r.Route("/link", func(r chi.Router) {
+			r.Get("/{bookID}", a.handleLinkGet())
+			r.Post("/", a.handleLinkAdd())
+			r.Delete("/{linkID}", a.handleLinkDelete())
+		})
+
 		r.Get("/book-author", a.handleGetBookAuthor())
 	})
 }

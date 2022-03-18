@@ -419,3 +419,74 @@ func (a *App) handleGetBookAuthor() http.HandlerFunc {
 		a.respond(w, r, http.StatusOK, booksAuthors)
 	}
 }
+
+/*
+* Links endpoints
+ */
+// handles GET /api/link/:bookID
+func (a *App) handleLinkGet() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := chi.URLParam(r, "bookID")
+		if id == "" {
+			a.error(w, r, http.StatusInternalServerError, ErrNoIDSpecified)
+			return
+		}
+
+		// Try get links
+		genre, err := a.services.GenreService().Get(id)
+		if err != nil {
+			a.logger.Logf("[INFO] During genre getting: %v\n", err)
+			a.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		a.respond(w, r, http.StatusOK, genre)
+	}
+}
+
+// handles POST /api/link
+func (a *App) handleLinkAdd() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var (
+			genre models.Genre
+			err   error
+		)
+
+		if err = json.NewDecoder(r.Body).Decode(&genre); err != nil {
+			a.logger.Logf("[INFO] During body parse: %v\n", err)
+			a.error(w, r, http.StatusBadRequest, err)
+			return
+		}
+
+		// Try save new genre
+		genre, err = a.services.GenreService().Add(genre)
+		if err != nil {
+			a.logger.Logf("[INFO] During genre saving: %v\n", err)
+			a.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		a.respond(w, r, http.StatusCreated, genre)
+	}
+}
+
+// handles DELETE /api/link/:linkID
+func (a *App) handleLinkDelete() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := chi.URLParam(r, "linkID")
+		if id == "" {
+			a.error(w, r, http.StatusInternalServerError, ErrNoIDSpecified)
+			return
+		}
+
+		// Try delete genre by ID
+		err := a.services.GenreService().Delete(id)
+		if err != nil {
+			a.logger.Logf("[INFO] During genre deleting: %v\n", err)
+			a.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
+
+		a.respond(w, r, http.StatusOK, "Deleted")
+	}
+}
