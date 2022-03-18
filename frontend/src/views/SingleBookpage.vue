@@ -24,7 +24,7 @@
 		<div class="book__download">
 			<h4 class="book__downheader">Ссылки для скачивания</h4>
 
-			<ol class="book__downlist">
+			<ol v-if="store.isLogined" class="book__downlist">
 				<li class="book__downitem">
 					<a href="#" download>download</a>
 				</li>
@@ -35,6 +35,12 @@
 					<a href="#" download>download</a>
 				</li>
 			</ol>
+			<p v-else>
+				Для скачивания необходима
+				<router-link to="/signup">регистрация</router-link>
+				<span style="margin-left: 5px;margin-right: 5px;">или</span>
+				<router-link to="/login">авторизация</router-link>
+			</p>
 		</div>
 	</div>
 </template>
@@ -48,6 +54,7 @@ import { GET } from "../HTTP"
 
 const store = useStore()
 const route = useRoute()
+const router = useRouter()
 const book = ref<Book>()
 const bookGenre = ref<Genre>()
 
