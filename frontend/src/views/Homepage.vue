@@ -1,5 +1,5 @@
 <template>
-	<section class="search">
+	<section class="search sectionMain">
 		<div class="sectionHeader">
 			<h2 class="sectionHeader__title">Поиск</h2>
 			<p
@@ -10,7 +10,7 @@
 		<search-form @search-submitted="handleSearch"></search-form>
 	</section>
 
-	<section class="books">
+	<section class="books sectionMain">
 		<div class="sectionHeader">
 			<h2 class="sectionHeader__title">Случайные книги</h2>
 			<p
@@ -74,17 +74,5 @@ const handleSearch = async (searchBy: string, searchQuery: string) => {
 	margin: 0;
 	font-size: 1.2rem;
 	font-weight: 500;
-}
-
-section {
-	border: 4px solid rgb(var(--greyblue));
-	border-radius: calc(var(--offset-half) / 2);
-	padding: var(--offset);
-}
-
-.books__cards {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: var(--offset);
 }
 </style>

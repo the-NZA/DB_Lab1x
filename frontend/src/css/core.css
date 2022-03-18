@@ -13,3 +13,17 @@ body {
 	max-width: var(--site-width);
 	margin: 0 auto;
 }
+
+.books__cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--offset);
+}
+
+.sectionMain {
+	border: 4px solid rgb(var(--greyblue));
+	border-radius: calc(var(--offset-half) / 2);
+	padding: var(--offset);
+
+	align-self: flex-start;
+}

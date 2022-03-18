@@ -25,7 +25,17 @@
 		</modal-view>
 	</template>
 
-	<template v-else>Just books</template>
+	<template v-else>
+		<section class="search sectionMain">
+			<search-form @searchSubmitted="handleSearch"></search-form>
+		</section>
+
+		<section class="books sectionMain">
+			<div class="books__cards">
+				<book-card v-for="book in searchedBooks" :book="book"></book-card>
+			</div>
+		</section>
+	</template>
 </template>
 
 <script lang="ts" setup>
@@ -33,7 +43,9 @@ import { ref, reactive, onBeforeMount, computed } from "vue";
 import { useStore } from "../store";
 import { storeToRefs } from "pinia";
 import GridButtonsVue from "../components/GridButtons.vue";
+import BookCard from "../components/BookCard.vue";
 import ActionsButtons from "../components/ActionsButtons.vue"
+import SearchForm from "../components/SearchForm.vue"
 import ModalView from "../components/ModalView.vue";
 import BookEditor from "../components/BookEditor.vue";
 import { AgGridVue } from "ag-grid-vue3";
@@ -45,9 +57,32 @@ import {
 	SelectionChangedEvent,
 } from "@ag-grid-community/all-modules";
 import { BookRow } from "../types/grid";
+import { Book } from "../types";
+import { GET } from "../HTTP";
 
 const store = useStore();
 const { isBooksLoaded, getBooksRows } = storeToRefs(store);
+
+const searchedBooks = ref<Book[]>([])
+onBeforeMount(async () => {
+	try {
+		const res = await GET<Book[]>("api/book/all");
+		searchedBooks.value = res
+
+	} catch (err) {
+		console.error(err);
+	}
+})
+
+const handleSearch = async (searchBy: string, searchQuery: string) => {
+	try {
+		const res = await GET<Book[]>(`api/book/search?${searchBy}=${searchQuery}`);
+		searchedBooks.value = res
+
+	} catch (err) {
+		console.error(err);
+	}
+}
 
 // Context for action buttons
 const actionContext = ref({});
