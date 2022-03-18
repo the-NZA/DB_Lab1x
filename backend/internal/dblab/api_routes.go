@@ -143,8 +143,6 @@ func (a *App) handleBookSearch() http.HandlerFunc {
 		author := r.URL.Query().Get(authorParam)
 		genre := r.URL.Query().Get(genreParam)
 
-		a.logger.Logf("[INFO] title %s, author %s, genre %s\n", title, author, genre)
-
 		books, err := a.services.BookService().Search(title, author, genre)
 		if err != nil {
 			a.error(w, r, http.StatusInternalServerError, err)
