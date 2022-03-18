@@ -28,7 +28,12 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
+
+const props = defineProps<{
+	initialBy?: string,
+	initialQuery?: string,
+}>()
 
 const emit = defineEmits<{
 	(e: "searchSubmitted", searchBy: string, searchQuery: string): void
@@ -40,6 +45,13 @@ const searchQuery = ref("")
 const onFormSubmit = () => {
 	emit('searchSubmitted', searchBy.value, searchQuery.value)
 }
+
+onBeforeMount(() => {
+	if (props.initialBy && props.initialQuery) {
+		searchBy.value = props.initialBy
+		searchQuery.value = props.initialQuery
+	}
+})
 </script>
 
 <style scoped>

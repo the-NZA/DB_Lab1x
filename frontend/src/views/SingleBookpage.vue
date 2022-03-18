@@ -42,7 +42,7 @@
 <script lang="ts" setup>
 import { ref, reactive, onBeforeMount } from "vue";
 import { useStore } from "../store";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { Book, Genre } from "../types"
 import { GET } from "../HTTP"
 

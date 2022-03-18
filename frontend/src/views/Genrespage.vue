@@ -25,13 +25,29 @@
 		</modal-view>
 	</template>
 
-	<template v-else>just genres</template>
+	<template v-else>
+		<section class="search sectionMain">
+			<search-form @searchSubmitted="handleSearch"></search-form>
+		</section>
+
+		<section class="genres sectionMain">
+			<div class="genres__cards">
+				<div class="genres__card" v-for="genre in getGenres">
+					<h3 class="genres__cardtitle">
+						<a href="#">{{ genre.title }}</a>
+					</h3>
+				</div>
+			</div>
+		</section>
+	</template>
 </template>
 
 <script lang="ts" setup>
 import { ref, reactive, onBeforeMount, onMounted, computed, watch } from "vue";
+import { useRouter } from "vue-router";
 import { useStore } from "../store";
 import { storeToRefs } from "pinia";
+import SearchForm from "../components/SearchForm.vue";
 import GridButtonsVue from "../components/GridButtons.vue";
 import ActionsButtons from "../components/ActionsButtons.vue"
 import ModalView from "../components/ModalView.vue";
@@ -45,9 +61,33 @@ import {
 	SelectionChangedEvent,
 } from "@ag-grid-community/all-modules";
 import { GenreRow } from "../types/grid";
+import { Book } from "../types";
+import { GET } from "../HTTP";
 
 const store = useStore();
-const { isGenresLoaded, getGenresRows } = storeToRefs(store);
+const { isGenresLoaded, getGenresRows, getGenres } = storeToRefs(store);
+
+const router = useRouter()
+
+const handleSearch = async (searchBy: string, searchQuery: string) => {
+	try {
+		// const res = await GET<Book[]>(`api/book/search?${searchBy}=${searchQuery}`);
+		// Need to redirect to /books with given res as payload
+		// console.log(res);
+		router.push({
+			name: "Books",
+			query: {
+				searchBy: searchBy,
+				searchQuery: searchQuery,
+			}
+		})
+
+		// searchedBooks.value = res
+
+	} catch (err) {
+		console.error(err);
+	}
+}
 
 // Context for action buttons
 const actionContext = ref({});
@@ -191,5 +231,31 @@ onBeforeMount(() => {
 });
 </script>
 
-<style>
+<style scoped>
+.genres__cards {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: var(--offset);
+}
+
+.genres__card {
+	background-color: rgb(var(--leanen));
+	box-shadow: var(--main-shadow);
+}
+
+.genres__cardtitle {
+	margin: 0;
+	padding: var(--offset);
+}
+
+.genres__cardtitle a {
+	text-decoration: none;
+	color: rgb(var(--sapphire));
+	transition: var(--main-transition);
+}
+
+.genres__cardtitle a:hover {
+	text-decoration: underline;
+	color: rgb(var(--redsand));
+}
 </style>

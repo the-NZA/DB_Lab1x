@@ -27,7 +27,7 @@
 
 	<template v-else>
 		<section class="search sectionMain">
-			<search-form @searchSubmitted="handleSearch"></search-form>
+			<search-form @searchSubmitted="handleSearch" :initialBy="searchBy" :initialQuery="searchQuery"></search-form>
 		</section>
 
 		<section class="books sectionMain">
@@ -41,6 +41,7 @@
 <script lang="ts" setup>
 import { ref, reactive, onBeforeMount, computed } from "vue";
 import { useStore } from "../store";
+import { useRoute, useRouter } from "vue-router";
 import { storeToRefs } from "pinia";
 import GridButtonsVue from "../components/GridButtons.vue";
 import BookCard from "../components/BookCard.vue";
@@ -63,8 +64,22 @@ import { GET } from "../HTTP";
 const store = useStore();
 const { isBooksLoaded, getBooksRows } = storeToRefs(store);
 
+const router = useRouter()
+const route = useRoute()
+const searchBy = route.query.searchBy?.toString()
+const searchQuery = route.query.searchQuery?.toString()
 const searchedBooks = ref<Book[]>([])
 onBeforeMount(async () => {
+
+	if (searchBy && searchQuery) {
+		handleSearch(searchBy, searchQuery)
+		router.replace({
+			path: route.path,
+		})
+		return
+	}
+
+
 	try {
 		const res = await GET<Book[]>("api/book/all");
 		searchedBooks.value = res
