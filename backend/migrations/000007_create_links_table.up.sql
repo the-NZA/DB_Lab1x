@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS links(
+	id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+	link text UNIQUE NOT NULL,
+	deleted boolean NOT NULL DEFAULT(false),
+	book_id integer NOT NULL,
+	FOREIGN KEY (book_id) REFERENCES books (id) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
