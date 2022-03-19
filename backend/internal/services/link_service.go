@@ -10,15 +10,14 @@ type LinkService struct {
 }
 
 func (l *LinkService) Get(bookID string) ([]models.Link, error) {
-	links, err := l.repository.GetByBookID(bookID)
-	if err != nil {
-		return links, err
-	}
-
-	return links, nil
+	return l.repository.GetByBookID(bookID)
 }
 
 func (l *LinkService) Add(link models.Link) (models.Link, error) {
+	if err := link.Validate(); err != nil {
+		return link, err
+	}
+
 	return l.repository.Add(link)
 }
 

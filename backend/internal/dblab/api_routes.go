@@ -433,14 +433,14 @@ func (a *App) handleLinkGet() http.HandlerFunc {
 		}
 
 		// Try get links
-		genre, err := a.services.GenreService().Get(id)
+		links, err := a.services.LinksService().Get(id)
 		if err != nil {
-			a.logger.Logf("[INFO] During genre getting: %v\n", err)
+			a.logger.Logf("[INFO] During links getting: %v\n", err)
 			a.error(w, r, http.StatusInternalServerError, err)
 			return
 		}
 
-		a.respond(w, r, http.StatusOK, genre)
+		a.respond(w, r, http.StatusOK, links)
 	}
 }
 
@@ -448,25 +448,25 @@ func (a *App) handleLinkGet() http.HandlerFunc {
 func (a *App) handleLinkAdd() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var (
-			genre models.Genre
-			err   error
+			link models.Link
+			err  error
 		)
 
-		if err = json.NewDecoder(r.Body).Decode(&genre); err != nil {
+		if err = json.NewDecoder(r.Body).Decode(&link); err != nil {
 			a.logger.Logf("[INFO] During body parse: %v\n", err)
 			a.error(w, r, http.StatusBadRequest, err)
 			return
 		}
 
-		// Try save new genre
-		genre, err = a.services.GenreService().Add(genre)
+		// Try save new link
+		link, err = a.services.LinksService().Add(link)
 		if err != nil {
-			a.logger.Logf("[INFO] During genre saving: %v\n", err)
+			a.logger.Logf("[INFO] During link saving: %v\n", err)
 			a.error(w, r, http.StatusInternalServerError, err)
 			return
 		}
 
-		a.respond(w, r, http.StatusCreated, genre)
+		a.respond(w, r, http.StatusCreated, link)
 	}
 }
 
@@ -479,10 +479,10 @@ func (a *App) handleLinkDelete() http.HandlerFunc {
 			return
 		}
 
-		// Try delete genre by ID
-		err := a.services.GenreService().Delete(id)
+		// Try delete link by ID
+		err := a.services.LinksService().Delete(id)
 		if err != nil {
-			a.logger.Logf("[INFO] During genre deleting: %v\n", err)
+			a.logger.Logf("[INFO] During link deleting: %v\n", err)
 			a.error(w, r, http.StatusInternalServerError, err)
 			return
 		}
