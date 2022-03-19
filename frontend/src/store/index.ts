@@ -242,6 +242,7 @@ export const useStore = defineStore("main", {
 				const idx = this.books.findIndex(book => book.id === res.book.id)
 
 				links.forEach(async (link) => {
+					await DELETE(`/api/link/${link.id}`)
 					await POST<Link>(link, "/api/link")
 				});
 
