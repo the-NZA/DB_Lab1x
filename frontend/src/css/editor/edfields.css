@@ -18,7 +18,7 @@
 }
 
 .edfields__input {
-	padding: var(--offset-half) ;
+	padding: var(--offset-half);
 	box-sizing: border-box;
 	border-radius: var(--offset-quarter);
 	border: 1px solid rgb(var(--greyblue));
@@ -28,4 +28,30 @@
 	padding: var(--offset-half);
 	resize: vertical;
 	min-height: calc(var(--site-width) / 10);
+}
+
+.edfields__inpbutton {
+	width: 200px;
+	margin: var(--offset-half) auto 0 auto;
+	box-shadow: var(--main-shadow);
+	background-color: rgb(var(--redsand));
+	border: none;
+	color: rgb(var(--white));
+	font-weight: bold;
+	font-size: 2rem;
+	cursor: pointer;
+	transition: var(--main-transition);
+}
+
+.edfields__inpbutton:hover {
+	transform: scale(1.03);
+}
+
+.edfields__links {
+	padding: 0 0 0 var(--offset-half);
+	margin: var(--offset-half) 0 var(--offset-half) 0;
+}
+
+.edfields__link:not(:last-of-type) {
+	margin-bottom: var(--offset-quarter);
 }

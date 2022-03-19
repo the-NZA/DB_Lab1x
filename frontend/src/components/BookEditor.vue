@@ -101,6 +101,24 @@
 					@input="store.setErrorWithMessage(false)"
 				/>
 			</div>
+
+			<div class="edfields__field">
+				<label class="edfields__label" for="edpagesurl">Ссылки для скачивания</label>
+
+				<ol v-if="currentLink || links.length" class="edfields__links">
+					<li v-for="link in links" :key="link.id + link.link" class="edfields__link">{{ link.link }}</li>
+					<li v-if="currentLink" class="edfields__link">{{ currentLink }}</li>
+				</ol>
+
+				<input
+					v-model.trim="currentLink"
+					type="url"
+					id="edpagesurl"
+					class="edfields__input"
+					placeholder="Введите ссылку для скачивания"
+				/>
+				<button @click="handleAddLink" class="edfields__inpbutton">+</button>
+			</div>
 		</div>
 		<div class="editor__footer">
 			<button @click="saveBook">{{ buttonText }}</button>
@@ -114,7 +132,7 @@ import { ref, onBeforeMount, reactive, computed, onMounted } from 'vue';
 import Multiselect from 'vue-multiselect'
 import ErrorMessage from './ErrorMessage.vue';
 import { useStore } from "../store"
-import { Author, Book, Genre } from '../types';
+import { Author, Book, Genre, Link } from '../types';
 import { BookEditorTitle, SaveButtonValue } from '../types/enums';
 
 const props = defineProps({
@@ -142,9 +160,22 @@ const currentBook = reactive<Book>({
 	pub_year: 0,
 	deleted: false,
 })
+const links = ref<Link[]>([])
+const currentLink = ref("")
 
 const title = ref<BookEditorTitle>(BookEditorTitle.Create)
 const buttonText = ref<SaveButtonValue>(SaveButtonValue.Save)
+
+const handleAddLink = () => {
+	links.value.push({
+		book_id: currentBook.id,
+		deleted: false,
+		id: "",
+		link: currentLink.value
+	})
+
+	currentLink.value = ""
+}
 
 onBeforeMount(() => {
 	// genres.value = store.getGenres
@@ -176,6 +207,8 @@ onBeforeMount(() => {
 })
 
 const saveBook = async () => {
+	handleAddLink() // Add current link to list
+
 	if (store.getGenres.length < 1) {
 		store.setErrorWithMessage(true, "Еще не создано ни одного жанра. Начните с этого")
 		return
