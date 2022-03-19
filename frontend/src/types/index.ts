@@ -58,3 +58,10 @@ export type RegisterBody= {
 	password: string,
 	email: string,
 }
+
+export type Link = {
+	id: string,
+	link: string,
+	deleted: boolean,
+	book_id: string,
+}

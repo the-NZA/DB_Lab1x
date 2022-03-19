@@ -24,17 +24,15 @@
 		<div class="book__download">
 			<h4 class="book__downheader">Ссылки для скачивания</h4>
 
-			<ol v-if="store.isLogined" class="book__downlist">
-				<li class="book__downitem">
-					<a href="#" download>download</a>
-				</li>
-				<li class="book__downitem">
-					<a href="#" download>download</a>
-				</li>
-				<li class="book__downitem">
-					<a href="#" download>download</a>
-				</li>
-			</ol>
+			<template v-if="store.isLogined">
+				<ol v-if="links" class="book__downlist">
+					<li v-for="link in links" :key="link.id" class="book__downitem">
+						<a :href="link.link" download>{{ link.link }}</a>
+					</li>
+				</ol>
+
+				<p style="margin: 0;" v-else>На данный момент нет ссылок для скачивания</p>
+			</template>
 			<p v-else>
 				Для скачивания необходима
 				<router-link to="/signup">регистрация</router-link>
@@ -49,7 +47,7 @@
 import { ref, reactive, onBeforeMount } from "vue";
 import { useStore } from "../store";
 import { useRoute, useRouter } from "vue-router";
-import { Book, Genre } from "../types"
+import { Book, Genre, Link } from "../types"
 import { GET } from "../HTTP"
 
 const store = useStore()
@@ -57,6 +55,7 @@ const route = useRoute()
 const router = useRouter()
 const book = ref<Book>()
 const bookGenre = ref<Genre>()
+const links = ref<Link[]>([])
 
 onBeforeMount(async () => {
 	try {
@@ -65,6 +64,9 @@ onBeforeMount(async () => {
 
 		const resGenre = await GET<Genre>(`api/genre/${book.value.genre_id}`);
 		bookGenre.value = resGenre
+
+		const resLinks = await GET<Link[]>(`api/link/${book.value.id}`)
+		links.value = resLinks
 	} catch (err) {
 		console.error(err);
 
