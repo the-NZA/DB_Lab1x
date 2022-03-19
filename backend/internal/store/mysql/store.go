@@ -14,6 +14,7 @@ type MySQLStore struct {
 	authors      storer.AuthorRepository
 	genres       storer.GenreRepository
 	users        storer.UserRepository
+	links        storer.LinkRepository
 	booksAuthors storer.BookAuthorRepository
 }
 
@@ -55,6 +56,14 @@ func (s *MySQLStore) BooksAuthors() storer.BookAuthorRepository {
 	}
 
 	return s.booksAuthors
+}
+
+func (s *MySQLStore) Links() storer.LinkRepository {
+	if s.links == nil {
+		s.links = &LinkRepository{db: s.db}
+	}
+
+	return s.links
 }
 
 func (s *MySQLStore) Close() error {

@@ -7,6 +7,7 @@ type Servicer interface {
 	GenreService() GenreServicer
 	AuthorService() AuthorServicer
 	AuthService() AuthServicer
+	LinksService() LinkServicer
 	BooksAuthors() BooksAuthorsServicer
 	Close() error
 }
@@ -44,4 +45,10 @@ type BooksAuthorsServicer interface {
 type AuthServicer interface {
 	Login(username, password string) (models.User, error)
 	Register(models.User) (models.User, error)
+}
+
+type LinkServicer interface {
+	Get(string) ([]models.Link, error)
+	Add(models.Link) (models.Link, error)
+	Delete(string) error
 }

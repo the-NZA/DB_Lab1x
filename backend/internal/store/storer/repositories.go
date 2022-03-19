@@ -36,3 +36,9 @@ type UserRepository interface {
 	GetByUsername(string) (models.User, error)
 	Add(models.User) (models.User, error)
 }
+
+type LinkRepository interface {
+	GetByBookID(bookID string) ([]models.Link, error)
+	Add(link models.Link) (models.Link, error)
+	Delete(linkID string) error
+}

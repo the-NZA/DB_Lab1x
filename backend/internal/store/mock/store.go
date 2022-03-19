@@ -52,6 +52,11 @@ func (s *MockStore) Users() storer.UserRepository {
 	return s.users
 }
 
+func (s *MockStore) Links() storer.LinkRepository {
+
+	return nil
+}
+
 func (s *MockStore) BooksAuthors() storer.BookAuthorRepository {
 	return nil
 }
