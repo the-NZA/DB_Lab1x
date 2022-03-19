@@ -1,6 +1,7 @@
 package sqlite3
 
 import (
+	"log"
 	"strconv"
 
 	"github.com/jmoiron/sqlx"
@@ -31,8 +32,9 @@ func (l *LinkRepository) GetByBookID(bookID string) ([]models.Link, error) {
 
 // Save new link
 func (l *LinkRepository) Add(link models.Link) (models.Link, error) {
-	res, err := l.db.Exec("INSERT INTO links (book_id, link)", link.BookID, link.Link)
+	res, err := l.db.Exec("INSERT INTO links (book_id, link) VALUES (?, ?)", link.BookID, link.Link)
 	if err != nil {
+		log.Println(err)
 		return link, err
 	}
 
