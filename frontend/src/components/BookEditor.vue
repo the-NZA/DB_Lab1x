@@ -105,7 +105,7 @@
 			<div class="edfields__field">
 				<label class="edfields__label" for="edpagesurl">Ссылки для скачивания</label>
 
-				<ol v-if="currentLink || links.length" class="edfields__links">
+				<ol v-if="currentLink || links?.length" class="edfields__links">
 					<li v-for="link in links" :key="link.id + link.link" class="edfields__link">{{ link.link }}</li>
 					<li v-if="currentLink" class="edfields__link">{{ currentLink }}</li>
 				</ol>
@@ -134,6 +134,7 @@ import ErrorMessage from './ErrorMessage.vue';
 import { useStore } from "../store"
 import { Author, Book, Genre, Link } from '../types';
 import { BookEditorTitle, SaveButtonValue } from '../types/enums';
+import { GET } from '../HTTP';
 
 const props = defineProps({
 	book_id: {
@@ -167,6 +168,10 @@ const title = ref<BookEditorTitle>(BookEditorTitle.Create)
 const buttonText = ref<SaveButtonValue>(SaveButtonValue.Save)
 
 const handleAddLink = () => {
+	if (!links.value) {
+		links.value = []
+	}
+
 	links.value.push({
 		book_id: currentBook.id,
 		deleted: false,
@@ -201,13 +206,17 @@ onBeforeMount(() => {
 				}
 			})
 
+			GET<Link[]>(`/api/link/${currentBook.id}`).then(r => links.value = r)
+
 			selectedAuthors.value = store.getAuthorsByBookID(book.id)
 		}
 	}
 })
 
 const saveBook = async () => {
-	handleAddLink() // Add current link to list
+	if (currentLink.value.length > 5) {
+		handleAddLink() // Add current link to list
+	}
 
 	if (store.getGenres.length < 1) {
 		store.setErrorWithMessage(true, "Еще не создано ни одного жанра. Начните с этого")
@@ -237,18 +246,18 @@ const saveBook = async () => {
 	})
 
 	if (title.value === BookEditorTitle.Create) {
-		// If create new genre
+		// If create new book
 		await store.addBook({
 			book: currentBook,
 			authors_ids: authorsIDs,
-		})
+		}, links.value)
 
 	} else {
 		// Update existing 
 		await store.updateBook({
 			book: currentBook,
 			authors_ids: authorsIDs,
-		})
+		}, links.value)
 	}
 
 	emit('savePressed')

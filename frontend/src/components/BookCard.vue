@@ -36,6 +36,9 @@ const handleButtonClick = () => {
 	border: 2px solid rgb(var(--sapphire));
 	border-radius: var(--offset-quarter);
 	padding: var(--offset-half);
+
+	display: flex;
+	flex-direction: column;
 }
 
 .bookCard__title {
@@ -48,6 +51,8 @@ const handleButtonClick = () => {
 }
 
 .bookCard__button {
+	margin-top: auto;
+
 	display: block;
 	width: 100%;
 	padding: var(--offset-quarter);
