@@ -1,6 +1,8 @@
 package sqlite3
 
 import (
+	"strconv"
+
 	"github.com/jmoiron/sqlx"
 	"github.com/the-NZA/DB_Lab1x/backend/internal/models"
 )
@@ -16,38 +18,38 @@ type LinkRepository struct {
 
 // Find links
 func (l *LinkRepository) GetByBookID(bookID string) ([]models.Link, error) {
-	// user := models.User{}
+	var links []models.Link
 
-	// err := l.db.Get(&user, getUserByUsername, username)
-	// if err != nil {
-	// 	return models.User{}, err
-	// }
+	// Get all links
+	err := l.db.Select(&links, "SELECT * FROM links WHERE book_id = ? AND deleted != true", bookID)
+	if err != nil {
+		return nil, err
+	}
 
-	// return user, nil
-
-	return []models.Link{}, nil
+	return links, nil
 }
 
 // Save new link
 func (l *LinkRepository) Add(link models.Link) (models.Link, error) {
-	// res, err := u.db.Exec(insertUser, user.Username, user.HashedPassword, user.Email)
-	// if err != nil {
-	// 	return user, err
-	// }
+	res, err := l.db.Exec("INSERT INTO links (book_id, link)", link.BookID, link.Link)
+	if err != nil {
+		return link, err
+	}
 
-	// // Try get inserted ID
-	// id, err := res.LastInsertId()
-	// if err != nil {
-	// 	return user, err
-	// }
+	// Try get ID for inserted link
+	id, err := res.LastInsertId()
+	if err != nil {
+		return link, err
+	}
 
-	// // Save string representation of ID
-	// user.ID = strconv.FormatInt(id, 10)
+	// Save string representation of ID
+	link.ID = strconv.FormatInt(id, 10)
 
-	// return user, nil
 	return link, nil
 }
 
+// Delete link
 func (l *LinkRepository) Delete(linkID string) error {
-	return nil
+	_, err := l.db.Exec("UPDATE links SET deleted = true WHERE id = ?", linkID)
+	return err
 }
