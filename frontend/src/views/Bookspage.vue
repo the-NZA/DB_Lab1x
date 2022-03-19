@@ -32,7 +32,14 @@
 
 		<section class="books sectionMain">
 			<div class="books__cards">
-				<book-card v-for="book in searchedBooks" :book="book"></book-card>
+				<template v-if="searchedBooks">
+					<book-card v-for="book in searchedBooks" :book="book"></book-card>
+				</template>
+
+				<p
+					style="margin: 0; font-weight: bold; text-align: center;grid-column-start: 2;"
+					v-else
+				>Совпадений не найдено</p>
 			</div>
 		</section>
 	</template>
