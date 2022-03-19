@@ -30,8 +30,10 @@ import SearchForm from "../components/SearchForm.vue"
 import { onBeforeMount, reactive, ref } from 'vue'
 import { GET } from '../HTTP';
 import { Book } from '../types';
+import { useRouter } from "vue-router";
 
 const randomBooks = ref<Book[]>([])
+const router = useRouter()
 
 onBeforeMount(async () => {
 	try {
@@ -45,8 +47,13 @@ onBeforeMount(async () => {
 
 const handleSearch = async (searchBy: string, searchQuery: string) => {
 	try {
-		const res = await GET<Book[]>(`api/book/search?${searchBy}=${searchQuery}`);
-		console.log(res);
+		router.push({
+			name: "Books",
+			query: {
+				searchBy: searchBy,
+				searchQuery: searchQuery,
+			}
+		})
 
 	} catch (err) {
 		console.error(err);
