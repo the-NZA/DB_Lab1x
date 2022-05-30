@@ -8,4 +8,4 @@ mysql_data/
 /etc/*
 !/etc/*.config.json
 
-docker-compose.*
+docker-compose.dev.*
