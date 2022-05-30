@@ -9,7 +9,7 @@ import (
 	"github.com/the-NZA/DB_Lab1x/backend/internal/models"
 )
 
-// handles POST /auth/login
+// handles POST /auth/login.
 func (a *App) handleLogin() http.HandlerFunc {
 	type reqLogin struct {
 		Username string `json:"username"`
@@ -40,7 +40,7 @@ func (a *App) handleLogin() http.HandlerFunc {
 	}
 }
 
-// handles POST /auth/signup
+// handles POST /auth/signup.
 func (a *App) handleRegister() http.HandlerFunc {
 	type reqRegister struct {
 		Username string `json:"username"`
@@ -61,19 +61,24 @@ func (a *App) handleRegister() http.HandlerFunc {
 			return
 		}
 
-		// lazy check password for emptyness
+		// lazy check password for emptiness
 		if len(strings.TrimSpace(req.Password)) < 8 {
-			err := fmt.Errorf("Password must have at least 8 non-white characters")
-			a.logger.Logf("[INFO] Check password length: %v\n", err)
-			a.error(w, r, http.StatusBadRequest, err)
+			err2 := fmt.Errorf("password must have at least 8 non-white characters")
+			a.logger.Logf("[INFO] Check password length: %v\n", err2)
+			a.error(w, r, http.StatusBadRequest, err2)
 			return
 		}
 
 		user.Username = req.Username
 		user.Email = req.Email
-		user.HashPassword(req.Password)
+		err = user.HashPassword(req.Password)
+		if err != nil {
+			a.logger.Logf("[INFO] During password hashing: %v\n", err)
+			a.error(w, r, http.StatusInternalServerError, err)
+			return
+		}
 
-		// Try create new user
+		// Try to create new user
 		user, err = a.services.AuthService().Register(user)
 		if err != nil {
 			a.logger.Logf("[INFO] During user creating: %v\n", err)

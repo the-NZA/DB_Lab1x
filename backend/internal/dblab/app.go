@@ -12,7 +12,7 @@ import (
 	"github.com/the-NZA/DB_Lab1x/backend/internal/services"
 )
 
-// App represents application's main structure
+// App represents application's main structure.
 type App struct {
 	config   *config.Config
 	logger   *lgr.Logger
@@ -21,15 +21,15 @@ type App struct {
 	router   *chi.Mux
 }
 
-// Returns new configured server
-func NewApp(c *config.Config, services services.Servicer) (*App, error) {
+// NewApp returns new configured server.
+func NewApp(c *config.Config, s services.Servicer) (*App, error) {
 	if c == nil {
 		return nil, config.ErrEmptyConfig
 	}
 
 	return &App{
 		config:   c,
-		services: services,
+		services: s,
 		logger:   configureLogger(c.LogDebug),
 		router:   chi.NewRouter(),
 	}, nil
@@ -127,7 +127,7 @@ func (a *App) Start() error {
 }
 
 func (a *App) Shutdown(ctx context.Context) error {
-	// Close DB sonnection
+	// Close DB connection
 	err := a.services.Close()
 	if err != nil {
 		return err

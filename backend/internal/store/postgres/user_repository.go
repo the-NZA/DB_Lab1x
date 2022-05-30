@@ -8,8 +8,8 @@ import (
 )
 
 var (
-	insertUser        = `INSERT INTO users (username, passwd, email) VALUES (?, ?, ?)`
-	getUserByUsername = `SELECT * FROM users WHERE username = ? AND deleted != true`
+	insertUser        = `INSERT INTO users (username, passwd, email) VALUES ($1, $2, $3)`
+	getUserByUsername = `SELECT * FROM users WHERE username = $1 AND deleted = false`
 )
 
 type UserRepository struct {
