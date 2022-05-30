@@ -4,6 +4,7 @@
 
 sqlite_data/
 mysql_data/
+postgres_data/
 
 /etc/*
 !/etc/*.config.json

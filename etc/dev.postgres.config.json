@@ -1,0 +1,7 @@
+{
+	"app_domain": "",
+	"app_port": 8080,
+	"db_type": "postgres",
+	"db_url": "user=lab_user password=lab123 dbname=lab sslmode=disable",
+	"log_debug": true
+}

@@ -13,4 +13,7 @@ require (
 	golang.org/x/crypto v0.0.0-20220314234724-5d542ad81a58
 )
 
-require github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
+require (
+	github.com/asaskevich/govalidator v0.0.0-20210307081110-f21760c49a8d // indirect
+	github.com/lib/pq v1.10.6 // indirect
+)

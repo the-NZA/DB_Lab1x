@@ -22,7 +22,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&configPath, "config", "etc/dev.sqlite.config.json", "Path to config file")
+	flag.StringVar(&configPath, "config", "etc/dev.postgres.config.json", "Path to config file")
 }
 
 func main() {

@@ -1,3 +1,6 @@
+include .env
+export
+
 APP = dblab
 BUILD_FLAGS = -v
 
@@ -28,3 +31,12 @@ start:
 .PHONY: buildf
 buildf:
 	cd frontend && npm run build
+
+# Docker commands
+.PHONY: docker_psql
+docker_psql:
+	docker exec -it lab_db psql -U ${POSTGRES_USER} ${POSTGRES_DB}
+
+.PHONY: docker_start
+docker_start:
+	docker compose -f ${COMPOSE_FILE} up
