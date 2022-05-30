@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	insertUser        = `INSERT INTO users (username, passwd, email) VALUES ($1, $2, $3)`
+	insertUser        = `INSERT INTO users (username, passwd, email) VALUES ($1, $2, $3) RETURNING id`
 	getUserByUsername = `SELECT * FROM users WHERE username = $1 AND deleted = false`
 )
 
@@ -30,19 +30,14 @@ func (u *UserRepository) GetByUsername(username string) (models.User, error) {
 
 // Add handler save new user
 func (u *UserRepository) Add(user models.User) (models.User, error) {
-	res, err := u.db.Exec(insertUser, user.Username, user.HashedPassword, user.Email)
+	insertedID := 0
+
+	err := u.db.QueryRowx(insertUser, user.Username, user.HashedPassword, user.Email).Scan(&insertedID)
 	if err != nil {
 		return user, err
 	}
 
-	// Try get inserted ID
-	id, err := res.LastInsertId()
-	if err != nil {
-		return user, err
-	}
-
-	// Save string representation of ID
-	user.ID = strconv.FormatInt(id, 10)
+	user.ID = strconv.Itoa(insertedID)
 
 	return user, nil
 }
