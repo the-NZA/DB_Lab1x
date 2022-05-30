@@ -40,3 +40,7 @@ docker_psql:
 .PHONY: docker_start
 docker_start:
 	docker compose -f ${COMPOSE_FILE} up
+
+.PHONY: docker_stop
+docker_stop:
+	docker-compose -f ${COMPOSE_FILE} down
