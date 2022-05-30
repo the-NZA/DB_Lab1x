@@ -76,7 +76,7 @@ func (b *BooksAuthorsRepository) getByIDs(bookID, authorID string) ([]models.Boo
 	return booksAuthors, nil
 }
 
-// Get books and authors slice by passed IDs
+// GetByIDs get books and authors slice by passed IDs
 func (b *BooksAuthorsRepository) GetByIDs(bookID, authorID string) ([]models.BookAuthor, error) {
 	hasBookID := len(bookID) != 0
 	hasAuthorID := len(authorID) != 0

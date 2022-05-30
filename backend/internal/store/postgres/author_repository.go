@@ -186,7 +186,7 @@ func (a *AuthorRepository) Delete(ID string) error {
 	return nil
 }
 
-// Gell all authors
+// GetAll return all authors
 func (a *AuthorRepository) GetAll() ([]models.Author, error) {
 	var authors []models.Author
 

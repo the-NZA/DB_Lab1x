@@ -1,8 +1,6 @@
 package postgres
 
 import (
-	"fmt"
-
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" // Postgres driver
 
@@ -81,9 +79,7 @@ func NewStore(c *config.Config) (storer.Storer, error) {
 		return nil, config.ErrEmptyConfig
 	}
 
-	dburl := fmt.Sprintf("%s", c.DBURL)
-
-	db, err := sqlx.Connect(c.DBType, dburl)
+	db, err := sqlx.Connect(c.DBType, c.DBURL)
 	if err != nil {
 		return nil, err
 	}

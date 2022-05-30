@@ -17,7 +17,7 @@ type LinkRepository struct {
 	db *sqlx.DB
 }
 
-// Find links
+// GetByBookID find links
 func (l *LinkRepository) GetByBookID(bookID string) ([]models.Link, error) {
 	var links []models.Link
 
@@ -30,7 +30,7 @@ func (l *LinkRepository) GetByBookID(bookID string) ([]models.Link, error) {
 	return links, nil
 }
 
-// Save new link
+// Add method save new link
 func (l *LinkRepository) Add(link models.Link) (models.Link, error) {
 	res, err := l.db.Exec("INSERT INTO links (book_id, link) VALUES (?, ?)", link.BookID, link.Link)
 	if err != nil {
@@ -50,7 +50,7 @@ func (l *LinkRepository) Add(link models.Link) (models.Link, error) {
 	return link, nil
 }
 
-// Delete link
+// Delete link from db
 func (l *LinkRepository) Delete(linkID string) error {
 	_, err := l.db.Exec("UPDATE links SET deleted = true WHERE id = ?", linkID)
 	return err

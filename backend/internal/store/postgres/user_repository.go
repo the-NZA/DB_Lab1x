@@ -16,7 +16,7 @@ type UserRepository struct {
 	db *sqlx.DB
 }
 
-// Find user
+// GetByUsername find user
 func (u *UserRepository) GetByUsername(username string) (models.User, error) {
 	user := models.User{}
 
@@ -28,7 +28,7 @@ func (u *UserRepository) GetByUsername(username string) (models.User, error) {
 	return user, nil
 }
 
-// Save new user
+// Add handler save new user
 func (u *UserRepository) Add(user models.User) (models.User, error) {
 	res, err := u.db.Exec(insertUser, user.Username, user.HashedPassword, user.Email)
 	if err != nil {

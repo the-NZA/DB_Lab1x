@@ -176,7 +176,7 @@ func (b *BookRepository) Delete(ID string) error {
 	return nil
 }
 
-// Get 3 random books from books table
+// GetRandom3 return 3 random books from books table
 func (b *BookRepository) GetRandom3() ([]models.Book, error) {
 	var books []models.Book
 
@@ -189,7 +189,7 @@ func (b *BookRepository) GetRandom3() ([]models.Book, error) {
 	return books, nil
 }
 
-// Get all books from books
+// GetAll return all books
 func (b *BookRepository) GetAll() ([]models.Book, error) {
 	var books []models.Book
 
@@ -204,14 +204,15 @@ func (b *BookRepository) GetAll() ([]models.Book, error) {
 
 // Search books by title, author and genre from books
 func (b *BookRepository) Search(title, author, genre string) ([]models.Book, error) {
-	if len(title) > 0 {
+	switch {
+	case len(title) > 0:
 		return b.searchByTitle(title)
-	} else if len(author) > 0 {
+	case len(author) > 0:
 		return b.searchByAuthor(author)
-	} else if len(genre) > 0 {
+	case len(genre) > 0:
 		return b.searchByGenre(genre)
-	} else {
-		return []models.Book{}, fmt.Errorf("Unsupported search param")
+	default:
+		return []models.Book{}, fmt.Errorf("unsupported search param")
 	}
 }
 

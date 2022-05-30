@@ -76,7 +76,7 @@ func (g *GenreRepository) Delete(ID string) error {
 	return err
 }
 
-// Get all genres
+// GetAll returns all genres
 func (g *GenreRepository) GetAll() ([]models.Genre, error) {
 	var genres []models.Genre
 
