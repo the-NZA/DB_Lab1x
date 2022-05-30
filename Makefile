@@ -17,6 +17,10 @@ clean:
 .DEFAULT_GOAL := build
 
 # Frontend commands
+.PHONE: frontend_install
+frontend_install:
+	cd frontend && npm install
+
 .PHONY: start
 start:
 	cd frontend && npm run dev
