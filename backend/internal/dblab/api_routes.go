@@ -118,7 +118,7 @@ func (a *App) handleBookDelete() http.HandlerFunc {
 // handles GET /api/book/random3
 func (a *App) handleBookGetRandom3() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// Try get all books
+		// Try to get all books
 		books, err := a.services.BookService().GetRandom3()
 		if err != nil {
 			a.logger.Logf("[INFO] During 3 random books getting: %v\n", err)
@@ -156,7 +156,7 @@ func (a *App) handleBookSearch() http.HandlerFunc {
 // handles GET /api/book/all
 func (a *App) handleBookGetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// Try get all books
+		// Try to get all books
 		books, err := a.services.BookService().GetAll()
 		if err != nil {
 			a.logger.Logf("[INFO] During all book getting: %v\n", err)
@@ -268,7 +268,7 @@ func (a *App) handleGenreDelete() http.HandlerFunc {
 // handles GET /api/genre/all
 func (a *App) handleGenreGetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// Try get all genres
+		// Try to get all genres
 		genres, err := a.services.GenreService().GetAll()
 		if err != nil {
 			a.logger.Logf("[INFO] During all genre getting: %v\n", err)
@@ -292,7 +292,7 @@ func (a *App) handleAuthorGet() http.HandlerFunc {
 			return
 		}
 
-		// Try get author
+		// Try to get author
 		author, err := a.services.AuthorService().Get(id)
 		if err != nil {
 			a.logger.Logf("[INFO] During author getting: %v\n", err)
@@ -368,7 +368,7 @@ func (a *App) handleAuthorDelete() http.HandlerFunc {
 			return
 		}
 
-		// Try delete author by id
+		// Try to delete author by id
 		err := a.services.AuthorService().Delete(id)
 		if err != nil {
 			a.logger.Logf("[INFO] During author deleting: %v\n", err)
@@ -383,7 +383,7 @@ func (a *App) handleAuthorDelete() http.HandlerFunc {
 // handles GET /api/author/all
 func (a *App) handleAuthorGetAll() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		// Try get all authors
+		// Try to get all authors
 		authors, err := a.services.AuthorService().GetAll()
 		if err != nil {
 			a.logger.Logf("[INFO] During all author getting: %v\n", err)
@@ -432,7 +432,7 @@ func (a *App) handleLinkGet() http.HandlerFunc {
 			return
 		}
 
-		// Try get links
+		// Try to get links
 		links, err := a.services.LinksService().Get(id)
 		if err != nil {
 			a.logger.Logf("[INFO] During links getting: %v\n", err)

@@ -10,15 +10,15 @@ import (
 
 var (
 	insertBook = `INSERT INTO books (title, snippet, pages_cnt, pub_year, genre_id) 
-			VALUES (?, ?, ?, ?, ?)`
+			VALUES ($1, $2, $3, $4, $5) RETURNING id`
 	updateBook = `UPDATE books 
-			SET 	title = ?, 
-				snippet = ?, 
-				pages_cnt = ?, 
-				pub_year = ?, 
-				deleted = ?, 
-				genre_id = ? 
-			WHERE id = ?`
+			SET 	title = $1, 
+				snippet = $2, 
+				pages_cnt = $3, 
+				pub_year = $4, 
+				deleted = $5, 
+				genre_id = $6  
+			WHERE id = $7`
 )
 
 type BookRepository struct {
@@ -29,7 +29,7 @@ type BookRepository struct {
 func (b *BookRepository) Get(ID string) (models.Book, error) {
 	book := models.Book{}
 
-	err := b.db.Get(&book, "SELECT * FROM books WHERE id = ? AND deleted != true", ID)
+	err := b.db.Get(&book, "SELECT * FROM books WHERE id = $1 AND deleted != true", ID)
 	if err != nil {
 		return models.Book{}, err
 	}
@@ -41,6 +41,8 @@ func (b *BookRepository) Get(ID string) (models.Book, error) {
 func (b *BookRepository) Add(ba models.BookWithAuthors) (models.BookWithAuthors, error) {
 	// Try save new book
 
+	insertedID := 0
+
 	// Start transaction
 	tx, err := b.db.Beginx()
 	if err != nil {
@@ -48,30 +50,23 @@ func (b *BookRepository) Add(ba models.BookWithAuthors) (models.BookWithAuthors,
 	}
 
 	// Save new book
-	res, err := tx.Exec(insertBook,
+	err = tx.QueryRowx(insertBook,
 		ba.Book.Title,
 		ba.Book.Snippet,
 		ba.Book.PagesCnt,
 		ba.Book.PublishYear,
 		ba.Book.GenreID,
-	)
-	if err != nil {
-		tx.Rollback()
-		return ba, err
-	}
-
-	// Try get ID for inserted book
-	id, err := res.LastInsertId()
+	).Scan(&insertedID)
 	if err != nil {
 		tx.Rollback()
 		return ba, err
 	}
 
 	// Save string representation of ID
-	ba.Book.ID = strconv.FormatInt(id, 10)
+	ba.Book.ID = strconv.Itoa(insertedID)
 
 	// Remove previous information about book if it exists and authors relations
-	_, err = tx.Exec("DELETE FROM books_authors WHERE book_id = ?", ba.Book.ID)
+	_, err = tx.Exec("DELETE FROM books_authors WHERE book_id = $1", ba.Book.ID)
 	if err != nil {
 		tx.Rollback()
 		return ba, err
@@ -79,7 +74,7 @@ func (b *BookRepository) Add(ba models.BookWithAuthors) (models.BookWithAuthors,
 
 	// Insert new information about book and authors relations
 	for i := range ba.AuthorsIDs {
-		_, err = tx.Exec("INSERT INTO books_authors (book_id, author_id) VALUES (?, ?)", ba.Book.ID, ba.AuthorsIDs[i])
+		_, err = tx.Exec("INSERT INTO books_authors (book_id, author_id) VALUES ($1, $2)", ba.Book.ID, ba.AuthorsIDs[i])
 		if err != nil {
 			tx.Rollback()
 			return ba, err
@@ -105,7 +100,7 @@ func (b *BookRepository) Update(ba models.BookWithAuthors) (models.BookWithAutho
 	}
 
 	// Remove previous information about book if it exists and authors relations
-	_, err = tx.Exec("DELETE FROM books_authors WHERE book_id = ?", ba.Book.ID)
+	_, err = tx.Exec("DELETE FROM books_authors WHERE book_id = $1", ba.Book.ID)
 	if err != nil {
 		tx.Rollback()
 		return ba, err
@@ -113,7 +108,7 @@ func (b *BookRepository) Update(ba models.BookWithAuthors) (models.BookWithAutho
 
 	// Insert new information about book and authors relations
 	for i := range ba.AuthorsIDs {
-		_, err = tx.Exec("INSERT INTO books_authors (book_id, author_id) VALUES (?, ?)", ba.Book.ID, ba.AuthorsIDs[i])
+		_, err = tx.Exec("INSERT INTO books_authors (book_id, author_id) VALUES ($1, $2)", ba.Book.ID, ba.AuthorsIDs[i])
 		if err != nil {
 			tx.Rollback()
 			return ba, err
@@ -153,14 +148,14 @@ func (b *BookRepository) Delete(ID string) error {
 		return err
 	}
 
-	_, err = tx.Exec("UPDATE books SET deleted = true WHERE id = ?", ID)
+	_, err = tx.Exec("UPDATE books SET deleted = true WHERE id = $1", ID)
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	// Remove previous information about book if it exists and authors relations
-	_, err = tx.Exec("DELETE FROM books_authors WHERE book_id = ?", ID)
+	_, err = tx.Exec("DELETE FROM books_authors WHERE book_id = $1", ID)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -220,7 +215,7 @@ func (b *BookRepository) searchByTitle(title string) ([]models.Book, error) {
 	var books []models.Book
 
 	// Get all books from database
-	err := b.db.Select(&books, "SELECT * FROM books WHERE deleted != true AND title LIKE '%'||?||'%'", title)
+	err := b.db.Select(&books, "SELECT * FROM books WHERE deleted != true AND title LIKE '%'||$1||'%'", title)
 	if err != nil {
 		return nil, err
 	}
@@ -232,7 +227,7 @@ func (b *BookRepository) searchByAuthor(author string) ([]models.Book, error) {
 	var books []models.Book
 
 	// Get all books from database
-	err := b.db.Select(&books, "select b.id, b.title, b.snippet, b.pages_cnt, b.pub_year, b.deleted, b.genre_id from books b join books_authors ba on b.id = ba.book_id join authors au on ba.author_id = au.id where au.lastname like '%'||?||'%'", author)
+	err := b.db.Select(&books, "select b.id, b.title, b.snippet, b.pages_cnt, b.pub_year, b.deleted, b.genre_id from books b join books_authors ba on b.id = ba.book_id join authors au on ba.author_id = au.id where au.lastname like '%'||$1||'%'", author)
 	if err != nil {
 		return nil, err
 	}
@@ -244,7 +239,7 @@ func (b *BookRepository) searchByGenre(genre string) ([]models.Book, error) {
 	var books []models.Book
 
 	// Get all books from database
-	err := b.db.Select(&books, "select b.id, b.title, b.snippet, b.pages_cnt, b.pub_year, b.deleted, b.genre_id from books b join genres g on b.genre_id = g.id where g.title like '%'||?||'%'", genre)
+	err := b.db.Select(&books, "select b.id, b.title, b.snippet, b.pages_cnt, b.pub_year, b.deleted, b.genre_id from books b join genres g on b.genre_id = g.id where g.title like '%'||$1||'%'", genre)
 	if err != nil {
 		return nil, err
 	}

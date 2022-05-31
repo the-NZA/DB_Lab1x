@@ -8,12 +8,12 @@ import (
 )
 
 var (
-	insertGenre = `INSERT INTO genres (title, snippet) VALUES (?, ?)`
+	insertGenre = `INSERT INTO genres (title, snippet) VALUES ($1, $2) RETURNING id`
 	updateGenre = `UPDATE genres 
-			SET 	title = ?, 
-				snippet = ?, 
-				deleted = ? 
-			WHERE id = ?`
+			SET 	title = $1, 
+				snippet = $2, 
+				deleted = $3 
+			WHERE id = $4`
 )
 
 type GenreRepository struct {
@@ -25,7 +25,7 @@ func (g *GenreRepository) Get(ID string) (models.Genre, error) {
 	genre := models.Genre{}
 
 	// Try get one genre
-	err := g.db.Get(&genre, "SELECT * FROM genres WHERE id = ? AND deleted != true", ID)
+	err := g.db.Get(&genre, "SELECT * FROM genres WHERE id = $1 AND deleted != true", ID)
 	if err != nil {
 		return models.Genre{}, err
 	}
@@ -36,19 +36,15 @@ func (g *GenreRepository) Get(ID string) (models.Genre, error) {
 // Add new genre
 func (g *GenreRepository) Add(genre models.Genre) (models.Genre, error) {
 	// Try save new genre
-	res, err := g.db.Exec(insertGenre, genre.Title, genre.Snippet)
-	if err != nil {
-		return genre, err
-	}
+	insertedID := 0
 
-	// Try get ID for inserted genre
-	id, err := res.LastInsertId()
+	err := g.db.QueryRowx(insertGenre, genre.Title, genre.Snippet).Scan(&insertedID)
 	if err != nil {
 		return genre, err
 	}
 
 	// Save string representation of ID
-	genre.ID = strconv.FormatInt(id, 10)
+	genre.ID = strconv.Itoa(insertedID)
 
 	return genre, nil
 }
@@ -71,7 +67,7 @@ func (g *GenreRepository) Update(genre models.Genre) (models.Genre, error) {
 
 // Delete genre
 func (g *GenreRepository) Delete(ID string) error {
-	_, err := g.db.Exec("UPDATE genres SET deleted = true WHERE id = ?", ID)
+	_, err := g.db.Exec("UPDATE genres SET deleted = true WHERE id = $1", ID)
 
 	return err
 }

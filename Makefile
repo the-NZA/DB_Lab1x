@@ -43,4 +43,4 @@ docker_start:
 
 .PHONY: docker_stop
 docker_stop:
-	docker-compose -f ${COMPOSE_FILE} down
+	docker compose -f ${COMPOSE_FILE} down

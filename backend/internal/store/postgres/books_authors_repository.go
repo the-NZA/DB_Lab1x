@@ -8,20 +8,7 @@ import (
 )
 
 var (
-	ErrEmptyIDs = errors.New("You must pass at least 1 ID")
-)
-
-var (
-	insertBooksAuthorssAuthors = `INSERT INTO books (title, snippet, pages_cnt, pub_year, genre_id) 
-			VALUES (?, ?, ?, ?, ?)`
-	updateBooksAuthorssAuthors = `UPDATE books 
-			SET 	title = ?, 
-				snippet = ?, 
-				pages_cnt = ?, 
-				pub_year = ?, 
-				deleted = ?, 
-				genre_id = ? 
-			WHERE id = ?`
+	ErrEmptyIDs = errors.New("you must pass at least 1 ID")
 )
 
 type BooksAuthorsRepository struct {
@@ -44,7 +31,7 @@ func (b *BooksAuthorsRepository) getAll() ([]models.BookAuthor, error) {
 func (b *BooksAuthorsRepository) getByBookID(bookID string) ([]models.BookAuthor, error) {
 	var booksAuthors []models.BookAuthor
 
-	err := b.db.Select(&booksAuthors, "SELECT * FROM books_authors WHERE book_id = ? AND deleted != true", bookID)
+	err := b.db.Select(&booksAuthors, "SELECT * FROM books_authors WHERE book_id = $1 AND deleted != true", bookID)
 	if err != nil {
 		return nil, err
 	}
@@ -56,7 +43,7 @@ func (b *BooksAuthorsRepository) getByBookID(bookID string) ([]models.BookAuthor
 func (b *BooksAuthorsRepository) getByAuthorID(authorID string) ([]models.BookAuthor, error) {
 	var booksAuthors []models.BookAuthor
 
-	err := b.db.Select(&booksAuthors, "SELECT * FROM books_authors WHERE author_id = ? AND deleted != true", authorID)
+	err := b.db.Select(&booksAuthors, "SELECT * FROM books_authors WHERE author_id = $2 AND deleted != true", authorID)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +55,7 @@ func (b *BooksAuthorsRepository) getByAuthorID(authorID string) ([]models.BookAu
 func (b *BooksAuthorsRepository) getByIDs(bookID, authorID string) ([]models.BookAuthor, error) {
 	var booksAuthors []models.BookAuthor
 
-	err := b.db.Select(&booksAuthors, "SELECT * FROM books_authors WHERE book_id = ? AND author_id = ? AND deleted != true", bookID, authorID)
+	err := b.db.Select(&booksAuthors, "SELECT * FROM books_authors WHERE book_id = $1 AND author_id = $2 AND deleted != true", bookID, authorID)
 	if err != nil {
 		return nil, err
 	}
@@ -78,8 +65,8 @@ func (b *BooksAuthorsRepository) getByIDs(bookID, authorID string) ([]models.Boo
 
 // GetByIDs get books and authors slice by passed IDs
 func (b *BooksAuthorsRepository) GetByIDs(bookID, authorID string) ([]models.BookAuthor, error) {
-	hasBookID := len(bookID) != 0
-	hasAuthorID := len(authorID) != 0
+	hasBookID := bookID != ""
+	hasAuthorID := authorID != ""
 
 	if !hasBookID && !hasAuthorID {
 		return b.getAll()

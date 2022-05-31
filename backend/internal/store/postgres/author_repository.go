@@ -8,15 +8,8 @@ import (
 )
 
 var (
-	insertAuthor = `INSERT INTO authors (firstname, lastname, surname,  snippet) 
-				VALUES (?, ?, ?, ?)`
-	updateAuthor = `UPDATE authors
-			SET 	firstname = ?, 
-				lastname = ?,
-				surname = ?,
-				snippet = ?, 
-				deleted = ? 
-			WHERE id = ?`
+	insertAuthor = `INSERT INTO authors (firstname, lastname, surname,  snippet) VALUES ($1, $2, $3, $4) RETURNING id`
+	updateAuthor = `UPDATE authors SET firstname = $1, lastname = $2, surname = $3, snippet = $4, deleted = $5 WHERE id = $6`
 )
 
 type AuthorRepository struct {
@@ -27,7 +20,7 @@ type AuthorRepository struct {
 func (a *AuthorRepository) Get(ID string) (models.Author, error) {
 	author := models.Author{}
 
-	err := a.db.Get(&author, "SELECT * FROM authors WHERE id = ? AND deleted != true", ID)
+	err := a.db.Get(&author, "SELECT * FROM authors WHERE id = $1 AND deleted != true", ID)
 	if err != nil {
 		return models.Author{}, err
 	}
@@ -39,6 +32,8 @@ func (a *AuthorRepository) Get(ID string) (models.Author, error) {
 func (a *AuthorRepository) Add(awb models.AuthorWithBooks) (models.AuthorWithBooks, error) {
 	// Try save new author
 
+	insertedID := 0
+
 	// Start transaction
 	tx, err := a.db.Beginx()
 	if err != nil {
@@ -46,31 +41,23 @@ func (a *AuthorRepository) Add(awb models.AuthorWithBooks) (models.AuthorWithBoo
 	}
 
 	// Save new author
-	res, err := tx.Exec(insertAuthor,
+	err = tx.QueryRowx(insertAuthor,
 		awb.Author.Firstname,
 		awb.Author.Lastname,
 		awb.Author.Surname,
 		awb.Author.Snippet,
-	)
+	).Scan(&insertedID)
 	if err != nil {
 		tx.Rollback()
 		return awb, err
 	}
 
-	// Try get ID for inserted author
-	id, err := res.LastInsertId()
-	if err != nil {
-		tx.Rollback()
-		return awb, err
-	}
-
-	// Save string representation of ID
-	awb.Author.ID = strconv.FormatInt(id, 10)
+	awb.Author.ID = strconv.Itoa(insertedID)
 
 	// If passed any book id for new author
 	if len(awb.BooksIDs) > 0 {
 		// Remove previous information about author if it exists and books relations
-		_, err = tx.Exec("DELETE FROM books_authors WHERE author_id = ?", awb.Author.ID)
+		_, err = tx.Exec("DELETE FROM books_authors WHERE author_id = $1", awb.Author.ID)
 		if err != nil {
 			tx.Rollback()
 			return awb, err
@@ -78,7 +65,7 @@ func (a *AuthorRepository) Add(awb models.AuthorWithBooks) (models.AuthorWithBoo
 
 		// Insert information about author and books relations
 		for i := range awb.BooksIDs {
-			_, err = tx.Exec("INSERT INTO books_authors (book_id, author_id) VALUES (?, ?)", awb.BooksIDs[i], awb.Author.ID)
+			_, err = tx.Exec("INSERT INTO books_authors (book_id, author_id) VALUES ($1, $2)", awb.BooksIDs[i], awb.Author.ID)
 			if err != nil {
 				tx.Rollback()
 				return awb, err
@@ -107,7 +94,7 @@ func (a *AuthorRepository) Update(awb models.AuthorWithBooks) (models.AuthorWith
 	}
 
 	// Remove previous information about author if it exists and books relations
-	_, err = tx.Exec("DELETE FROM books_authors WHERE author_id = ?", awb.Author.ID)
+	_, err = tx.Exec("DELETE FROM books_authors WHERE author_id = $1", awb.Author.ID)
 	if err != nil {
 		tx.Rollback()
 		return awb, err
@@ -116,7 +103,7 @@ func (a *AuthorRepository) Update(awb models.AuthorWithBooks) (models.AuthorWith
 	// If passed any book id for new author
 	if len(awb.BooksIDs) > 0 {
 		// Remove previous information about author if it exists and books relations
-		_, err = tx.Exec("DELETE FROM books_authors WHERE author_id = ?", awb.Author.ID)
+		_, err = tx.Exec("DELETE FROM books_authors WHERE author_id = $1", awb.Author.ID)
 		if err != nil {
 			tx.Rollback()
 			return awb, err
@@ -124,7 +111,7 @@ func (a *AuthorRepository) Update(awb models.AuthorWithBooks) (models.AuthorWith
 
 		// Insert information about author and books relations
 		for i := range awb.BooksIDs {
-			_, err = tx.Exec("INSERT INTO books_authors (book_id, author_id) VALUES (?, ?)", awb.BooksIDs[i], awb.Author.ID)
+			_, err = tx.Exec("INSERT INTO books_authors (book_id, author_id) VALUES ($1, $2)", awb.BooksIDs[i], awb.Author.ID)
 			if err != nil {
 				tx.Rollback()
 				return awb, err
@@ -164,14 +151,14 @@ func (a *AuthorRepository) Delete(ID string) error {
 		return err
 	}
 
-	_, err = tx.Exec("UPDATE authors SET deleted = true WHERE id = ?", ID)
+	_, err = tx.Exec("UPDATE authors SET deleted = true WHERE id = $1", ID)
 	if err != nil {
 		tx.Rollback()
 		return err
 	}
 
 	// Remove previous information about author if it exists and books relations
-	_, err = tx.Exec("DELETE FROM books_authors WHERE author_id = ?", ID)
+	_, err = tx.Exec("DELETE FROM books_authors WHERE author_id = $1", ID)
 	if err != nil {
 		tx.Rollback()
 		return err
