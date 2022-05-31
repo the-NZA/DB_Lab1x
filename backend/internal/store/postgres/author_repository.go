@@ -1,7 +1,9 @@
 package postgres
 
 import (
+	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/the-NZA/DB_Lab1x/backend/internal/models"
@@ -64,12 +66,12 @@ func (a *AuthorRepository) Add(awb models.AuthorWithBooks) (models.AuthorWithBoo
 		}
 
 		// Insert information about author and books relations
-		for i := range awb.BooksIDs {
-			_, err = tx.Exec("INSERT INTO books_authors (book_id, author_id) VALUES ($1, $2)", awb.BooksIDs[i], awb.Author.ID)
-			if err != nil {
-				tx.Rollback()
-				return awb, err
-			}
+		insertBooksAuthors, params := insertMultipleBooksAuthors(
+			"INSERT INTO books_authors (book_id, author_id) VALUES ", awb.Author.ID, awb.BooksIDs)
+		_, err = tx.Exec(insertBooksAuthors, params...)
+		if err != nil {
+			tx.Rollback()
+			return awb, err
 		}
 	}
 
@@ -110,12 +112,12 @@ func (a *AuthorRepository) Update(awb models.AuthorWithBooks) (models.AuthorWith
 		}
 
 		// Insert information about author and books relations
-		for i := range awb.BooksIDs {
-			_, err = tx.Exec("INSERT INTO books_authors (book_id, author_id) VALUES ($1, $2)", awb.BooksIDs[i], awb.Author.ID)
-			if err != nil {
-				tx.Rollback()
-				return awb, err
-			}
+		insertBooksAuthors, params := insertMultipleBooksAuthors(
+			"INSERT INTO books_authors (book_id, author_id) VALUES ", awb.Author.ID, awb.BooksIDs)
+		_, err = tx.Exec(insertBooksAuthors, params...)
+		if err != nil {
+			tx.Rollback()
+			return awb, err
 		}
 	}
 
@@ -184,4 +186,23 @@ func (a *AuthorRepository) GetAll() ([]models.Author, error) {
 	}
 
 	return authors, nil
+}
+
+func insertMultipleBooksAuthors(query, id string, idList []string) (q string, p []interface{}) {
+	values := make([]string, 0, len(idList))
+	params := make([]any, 0, len(idList)*2)
+
+	// Iterate over all books ids and add them to params array
+	paramNum := 1
+	for i := range idList {
+		values = append(values, fmt.Sprintf("($%d, $%d)", paramNum, paramNum+1))
+		params = append(params, idList[i], id)
+
+		paramNum += 2
+	}
+
+	// Add all books ids to query
+	query += strings.Join(values, ", ")
+
+	return query, params
 }
